@@ -1,0 +1,91 @@
+<!doctype html>
+<html class="no-js" lang="">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>Editor</title>
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+Editor
+<hr/>
+<style>
+#imagecanvas{
+	border:1px dotted #aaa;
+}
+</style>
+<canvas id="imagecanvas" width="500" height="500">
+<script>
+var y = JSON.parse( decodeURIComponent( window.location.search ).slice( 1 ) ) ;
+console.log( y ) ;
+//////////////////////////////////////////////////////////
+var canvas = document.getElementById('imagecanvas');
+var ctx = canvas.getContext('2d');
+var pointerdown = false ;
+var pointerposlast = false ;
+//////////////////////////////////////////////////////////
+var img = new Image( ) ;   
+img.addEventListener( 'load' , function( ) {
+	var ratioX = ctx.canvas.clientWidth / img.naturalWidth ;
+	var ratioY = ctx.canvas.clientHeight / img.naturalHeight ;
+	var ratio = Math.min( ratioX , ratioY ) ;
+	ctx.drawImage(img, 0, 0, img.naturalWidth * ratio, img.naturalHeight * ratio);
+	console.log( "loaded" ) ;
+} , false ) ;
+img.src = y[ "l" ] ;
+//////////////////////////////////////////////////////////
+function getMousePos( canvas , evt ) {
+	var rect = canvas.getBoundingClientRect( ) ;
+	return {
+	  x : Math.floor( evt.clientX - rect.left ) ,
+	  y : Math.floor( evt.clientY - rect.top )
+	} ;
+} ;
+canvas.addEventListener( 'mousemove' , function( evt ) {
+	if( pointerdown ) {
+		var mousePos = getMousePos( canvas , evt ) ;
+		//console.log( mousePos ) ;
+		if( pointerposlast !== false ) {
+			ctx.beginPath();
+			ctx.moveTo(pointerposlast.x, pointerposlast.y);
+			ctx.lineTo(mousePos.x, mousePos.y);
+			ctx.lineWidth = 7;
+			// set line color
+			ctx.strokeStyle = '#000000';
+			ctx.stroke();
+			ctx.beginPath();
+			ctx.moveTo(pointerposlast.x, pointerposlast.y);
+			ctx.lineTo(mousePos.x, mousePos.y);
+			ctx.lineWidth = 3;
+			// set line color
+			ctx.strokeStyle = '#FFFFFF';
+			ctx.stroke();
+		} ;
+		
+		pointerposlast = mousePos ;
+	}
+} , false ) ;
+canvas.addEventListener( 'mousedown' , function( evt ) {
+	pointerdown = true ;
+	//var mousePos = getMousePos( canvas , evt ) ;
+	//pointerposlast=mousePos;
+	//var mousePos = getMousePos( canvas , evt ) ;
+	//console.log( mousePos ) ;
+} , false ) ;
+canvas.addEventListener( 'mouseup' , function( evt ) {
+	pointerdown = false ;
+	pointerposlast=false;
+	//var mousePos = getMousePos( canvas , evt ) ;
+	//console.log( mousePos ) ;
+} , false ) ;
+canvas.addEventListener( 'mouseout' , function( evt ) {
+	pointerdown = false ;
+	pointerposlast=false;
+	//var mousePos = getMousePos( canvas , evt ) ;
+	//console.log( mousePos ) ;
+} , false ) ;
+//////////////////////////////////////////////////////////
+</script>
+</body>
+</html>

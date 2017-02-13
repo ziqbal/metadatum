@@ -7,7 +7,9 @@ APP=${PWD##*/}
 ####################################
 
 php src/gen-bookmark.php
+php src/gen-editor.php
 
 cp cache/bookmark.html dist/bookmark.html
+cp cache/editor.html dist/editor.html
 
 
