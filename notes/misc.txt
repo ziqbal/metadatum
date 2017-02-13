@@ -1,0 +1,14 @@
+
+
+image on internet
+superimpose squiggles
+script tag with ?
+annotate images
+with CDN
+how to monetize?
+lifetime…
+
+
+javascript:(function()%7B(%20function(%20)%20%7Bfunction%20callback(%20)%20%7B___BOOT___(%20)%20%3B%7D%20%3Bvar%20s%20%3D%20document.createElement(%20%22script%22%20)%20%3Bs.src%20%3D%20%22https%3A%2F%2Fomaad.com%2Fapps%2Fbookmarklets%2Fdebug%2F%3Ft%3D%22%20%2B%20(%20new%20Date%20).toString(%20)%20%2B%20%22%26p%3D%22%20%2B%20performance.now(%20)%20%2B%20%22%26r%3D%22%20%2B%20Math.random(%20)%20%3Bif(%20s.addEventListener%20)%20%7Bs.addEventListener(%20%22load%22%20%2C%20callback%20%2C%20false%20)%20%3B%7D%20else%20if(%20s.readyState%20)%20%7Bs.onreadystatechange%20%3D%20callback%20%3B%7D%20%3Bdocument.body.appendChild(%20s%20)%20%3B%7D%20)(%20)%20%7D)()
+
+
