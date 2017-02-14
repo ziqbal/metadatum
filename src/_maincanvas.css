@@ -1,0 +1,15 @@
+
+
+
+#maincanvas {
+
+	border : 3px dotted #F00 ;
+	width : 800px ;
+	height : 600px ;
+
+
+    padding: 0;
+    margin: auto;
+    display: block;
+
+}

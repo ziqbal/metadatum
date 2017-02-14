@@ -1,33 +1,32 @@
 <!doctype html>
-
 <html class="no-js" lang="">
-
 <head>
-
 <meta charset="utf-8">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
+<title>Editor</title>
 <meta name="description" content="">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
-<title>Editor</title>
-
 </head>
-
 <body>
 
-__INCLUDES__
-
-<hr/>
-
 Editor
-
-<hr/>
 
 <a href="javascript:createUrlRedirect();">Create Url</a>
 
 <hr/>
 
-<canvas id="maincanvas" width="123" height="321">
+<style>
+
+#imagecanvas{
+
+	border:1px dotted #aaa;
+
+}
+
+
+</style>
+
+<canvas id="imagecanvas" width="500" height="500">
 
 <script>
 
@@ -37,63 +36,25 @@ console.log( query ) ;
 
 //////////////////////////////////////////////////////////
 
-var maincanvas = document.getElementById( 'maincanvas' ) ;
-
-maincanvas.width=maincanvas.clientWidth;
-maincanvas.height=maincanvas.clientHeight;
-
-
-var ctx = maincanvas.getContext('2d');
-
-maincanvas.addEventListener( 'mousedown' , _pointerStart, false ) ;
-maincanvas.addEventListener( 'mousemove' , _pointerMove, false ) ;
-maincanvas.addEventListener( 'mouseup'   , _pointerEnd , false  ) ;
-maincanvas.addEventListener( 'mouseout'  , _pointerEnd, false   ) ;
-
+var canvas = document.getElementById('imagecanvas');
+var ctx;
 var pointerdown = false ;
 var pointerposlast = false ;
 
 //////////////////////////////////////////////////////////
 
-var x = [ ] ;
-var y = [ ] ;
-var strokes = [ ] ;
-
-//////////////////////////////////////////////////////////
-
 var img = new Image( ) ;   
 
-
-var fitImageOn = function( canvas , imageObj ) {
-
-	var imageAspectRatio = imageObj.width / imageObj.height;
-	var canvasAspectRatio = canvas.width / canvas.height;
-	var renderableHeight, renderableWidth, xStart, yStart;
-
-	if(imageAspectRatio < canvasAspectRatio) {
-		renderableHeight = canvas.height;
-		renderableWidth = imageObj.width * (renderableHeight / imageObj.height);
-		xStart = (canvas.width - renderableWidth) / 2;
-		yStart = 0;
-	} else if(imageAspectRatio > canvasAspectRatio) {
-		renderableWidth = canvas.width
-		renderableHeight = imageObj.height * (renderableWidth / imageObj.width);
-		xStart = 0;
-		yStart = (canvas.height - renderableHeight) / 2;
-	} else {
-		renderableHeight = canvas.height;
-		renderableWidth = canvas.width;
-		xStart = 0;
-		yStart = 0;
-	};
-	ctx.drawImage(imageObj, xStart, yStart, renderableWidth, renderableHeight);
-};
-
-
+var x = [];
+var y = [];
+var strokes = [];
 
 img.addEventListener( 'load' , function( ) {
-
-	fitImageOn(maincanvas, img);
+	ctx = canvas.getContext('2d');
+	var ratioX = ctx.canvas.clientWidth / img.naturalWidth ;
+	var ratioY = ctx.canvas.clientHeight / img.naturalHeight ;
+	var ratio = Math.min( ratioX , ratioY ) ;
+	ctx.drawImage(img, 0, 0, img.naturalWidth * ratio, img.naturalHeight * ratio);
 	redraw();
 
 } , false ) ;
@@ -178,6 +139,40 @@ function drawAndAddLine(x1,y1,x2,y2) {
 	addPoint(x2,y2); 
 } ;
 
+function strokeEnd(evt) {
+	pointerdown = false ;
+	pointerposlast=false;
+
+	if(x.length>0) {
+		var lastStrokePos = strokes[strokes.length-1];
+		if(lastStrokePos!=x.length) {
+			strokes.push(x.length);
+		} ;
+	} ;
+} ;
+
+function strokeStart(evt) {
+	pointerdown = true ;	
+} ;
+
+canvas.addEventListener( 'mousemove' , function( evt ) {
+
+	if( pointerdown ) {
+
+		var mousePos = getMousePos( canvas , evt ) ;
+	
+		if( pointerposlast !== false ) {
+			drawAndAddLine(pointerposlast.x,pointerposlast.y,mousePos.x,mousePos.y);
+		} else {
+			addPoint(mousePos.x,mousePos.y);
+		} ;
+		
+		pointerposlast = mousePos ;
+
+	} ;
+
+} , false ) ;
+
 
 function toData() {
 	var data = [];
@@ -200,7 +195,7 @@ function fromData(data) {
 	
 
 	var strokeIndex = 0;
-	_pointerStart();
+	strokeStart();
 	for(var i=0;i<dataPoints;i++) {
 		
 		var px=data[2+strokesLength+i];
@@ -208,15 +203,19 @@ function fromData(data) {
 
 		addPoint(px,py);
 		if(i>=data[2+strokeIndex]) {
-		   _pointerEnd();	
-		   _pointerStart();
+		   strokeEnd();	
+		   strokeStart();
 		   strokeIndex++;	
 		} ;
 	} ;
 
-	_pointerEnd();
+	strokeEnd();
 	showImage();
 }
+
+canvas.addEventListener( 'mousedown' , strokeStart, false ) ;
+canvas.addEventListener( 'mouseup'   , strokeEnd , false  ) ;
+canvas.addEventListener( 'mouseout'  , strokeEnd, false   ) ;
 
 //////////////////////////////////////////////////////////
 

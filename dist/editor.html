@@ -3,37 +3,134 @@
 <head>
 <meta charset="utf-8">
 <meta http-equiv="x-ua-compatible" content="ie=edge">
-<title>Editor</title>
 <meta name="description" content="">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Editor</title>
 </head>
 <body>
+<style>#maincanvas {
+	border : 3px dotted #F00 ;
+	width : 800px ;
+	height : 600px ;
+    padding: 0;
+    margin: auto;
+    display: block;
+}</style>
+<script>function _pointerEnd( evt ) {
+	//console.log( "pointerend" ) ;
+	pointerdown = false ;
+	pointerposlast = false ;
+	if( x.length > 0 ) {
+		var lastStrokePos = strokes[ strokes.length-1 ] ;
+		if( lastStrokePos != x.length ) {
+			strokes.push( x.length ) ;
+		} ;
+	} ;
+} ;
+function _pointerStart( evt ) {
+	//console.log( "pointerstart" ) ;
+	pointerdown = true ;	
+} ;
+function _pointerMove( evt ) {
+	//console.log( "pointermove" ) ;
+	if( pointerdown ) {
+		var mousePos = getMousePos( maincanvas , evt ) ;
+	
+		if( pointerposlast !== false ) {
+			drawAndAddLine( pointerposlast.x , pointerposlast.y , mousePos.x , mousePos.y ) ;
+		} else {
+			addPoint( mousePos.x , mousePos.y ) ;
+		} ;
+		
+		pointerposlast = mousePos ;
+	} ;
+} ;</script>
+<hr/>
 Editor
 <hr/>
-<style>
-#imagecanvas{
-	border:1px dotted #aaa;
-}
-</style>
-<canvas id="imagecanvas" width="500" height="500">
+<a href="javascript:createUrlRedirect();">Create Url</a>
+<hr/>
+<canvas id="maincanvas" width="123" height="321">
 <script>
-var y = JSON.parse( decodeURIComponent( window.location.search ).slice( 1 ) ) ;
-console.log( y ) ;
+var query = JSON.parse( decodeURIComponent( window.location.search ).slice( 1 ) ) ;
+console.log( query ) ;
 //////////////////////////////////////////////////////////
-var canvas = document.getElementById('imagecanvas');
-var ctx = canvas.getContext('2d');
+var maincanvas = document.getElementById( 'maincanvas' ) ;
+maincanvas.width=maincanvas.clientWidth;
+maincanvas.height=maincanvas.clientHeight;
+var ctx = maincanvas.getContext('2d');
+maincanvas.addEventListener( 'mousedown' , _pointerStart, false ) ;
+maincanvas.addEventListener( 'mousemove' , _pointerMove, false ) ;
+maincanvas.addEventListener( 'mouseup'   , _pointerEnd , false  ) ;
+maincanvas.addEventListener( 'mouseout'  , _pointerEnd, false   ) ;
 var pointerdown = false ;
 var pointerposlast = false ;
 //////////////////////////////////////////////////////////
+var x = [ ] ;
+var y = [ ] ;
+var strokes = [ ] ;
+//////////////////////////////////////////////////////////
 var img = new Image( ) ;   
+var fitImageOn = function( canvas , imageObj ) {
+	var imageAspectRatio = imageObj.width / imageObj.height;
+	var canvasAspectRatio = canvas.width / canvas.height;
+	var renderableHeight, renderableWidth, xStart, yStart;
+	if(imageAspectRatio < canvasAspectRatio) {
+		renderableHeight = canvas.height;
+		renderableWidth = imageObj.width * (renderableHeight / imageObj.height);
+		xStart = (canvas.width - renderableWidth) / 2;
+		yStart = 0;
+	} else if(imageAspectRatio > canvasAspectRatio) {
+		renderableWidth = canvas.width
+		renderableHeight = imageObj.height * (renderableWidth / imageObj.width);
+		xStart = 0;
+		yStart = (canvas.height - renderableHeight) / 2;
+	} else {
+		renderableHeight = canvas.height;
+		renderableWidth = canvas.width;
+		xStart = 0;
+		yStart = 0;
+	};
+	ctx.drawImage(imageObj, xStart, yStart, renderableWidth, renderableHeight);
+};
 img.addEventListener( 'load' , function( ) {
-	var ratioX = ctx.canvas.clientWidth / img.naturalWidth ;
-	var ratioY = ctx.canvas.clientHeight / img.naturalHeight ;
-	var ratio = Math.min( ratioX , ratioY ) ;
-	ctx.drawImage(img, 0, 0, img.naturalWidth * ratio, img.naturalHeight * ratio);
-	console.log( "loaded" ) ;
+	fitImageOn(maincanvas, img);
+	redraw();
 } , false ) ;
-img.src = y[ "l" ] ;
+function reset() {
+	x=[];
+	y=[];
+	strokes=[];
+} ;
+function showImage() {
+	img.src = query["l"];
+} ;
+if(query["data"]!=null) {
+	fromData(query["data"]);
+} else {
+	showImage();
+} ;
+function redraw() {
+	var strokeIndex=0;
+	var x1,y1,x2,y2;
+	for(var i=0;i<x.length;i++) {
+		x1=x2;
+		y1=y2;
+		x2=x[i];
+		y2=y[i];
+		if(x1!=null && y1!=null) {
+			if(i<strokes[strokeIndex]) {
+				drawLine(x1,y1,x2,y2);
+			} else {
+			   strokeIndex++;	
+			   x1=null;
+			   y1=null;
+			   x2=null;
+			   y2=null;	
+			} ;
+		} ;
+	} ;
+} ;
 //////////////////////////////////////////////////////////
 function getMousePos( canvas , evt ) {
 	var rect = canvas.getBoundingClientRect( ) ;
@@ -42,50 +139,68 @@ function getMousePos( canvas , evt ) {
 	  y : Math.floor( evt.clientY - rect.top )
 	} ;
 } ;
-canvas.addEventListener( 'mousemove' , function( evt ) {
-	if( pointerdown ) {
-		var mousePos = getMousePos( canvas , evt ) ;
-		//console.log( mousePos ) ;
-		if( pointerposlast !== false ) {
-			ctx.beginPath();
-			ctx.moveTo(pointerposlast.x, pointerposlast.y);
-			ctx.lineTo(mousePos.x, mousePos.y);
-			ctx.lineWidth = 7;
-			// set line color
-			ctx.strokeStyle = '#000000';
-			ctx.stroke();
-			ctx.beginPath();
-			ctx.moveTo(pointerposlast.x, pointerposlast.y);
-			ctx.lineTo(mousePos.x, mousePos.y);
-			ctx.lineWidth = 3;
-			// set line color
-			ctx.strokeStyle = '#FFFFFF';
-			ctx.stroke();
-		} ;
+function drawLine(x1,y1,x2,y2) {
+	ctx.beginPath();
+	ctx.moveTo(x1, y1);
+	ctx.lineTo(x2, y2);
+	ctx.lineWidth = 7;
+	// set line color
+	ctx.strokeStyle = '#000000';
+	ctx.stroke();
+	ctx.beginPath();
+	ctx.moveTo(x1, y1);
+	ctx.lineTo(x2, y2);
+	ctx.lineWidth = 3;
+	// set line color
+	ctx.strokeStyle = '#FFFFFF';
+	ctx.stroke();
+} ;
+function addPoint(px,py) {	
+ x.push(px);
+ y.push(py);
+} ;
+function drawAndAddLine(x1,y1,x2,y2) {
+	drawLine(x1,y1,x2,y2);
+	addPoint(x2,y2); 
+} ;
+function toData() {
+	var data = [];
+	data.push(strokes.length);
+	data.push(x.length);
+	Array.prototype.push.apply(data,strokes);
+	Array.prototype.push.apply(data,x);
+	Array.prototype.push.apply(data,y);
+	return data;
+} ;
+function fromData(data) {
+	reset();
+	var strokesLength = data[0];
+	var dataPoints = data[1];
+	
+	var strokeIndex = 0;
+	_pointerStart();
+	for(var i=0;i<dataPoints;i++) {
 		
-		pointerposlast = mousePos ;
-	}
-} , false ) ;
-canvas.addEventListener( 'mousedown' , function( evt ) {
-	pointerdown = true ;
-	//var mousePos = getMousePos( canvas , evt ) ;
-	//pointerposlast=mousePos;
-	//var mousePos = getMousePos( canvas , evt ) ;
-	//console.log( mousePos ) ;
-} , false ) ;
-canvas.addEventListener( 'mouseup' , function( evt ) {
-	pointerdown = false ;
-	pointerposlast=false;
-	//var mousePos = getMousePos( canvas , evt ) ;
-	//console.log( mousePos ) ;
-} , false ) ;
-canvas.addEventListener( 'mouseout' , function( evt ) {
-	pointerdown = false ;
-	pointerposlast=false;
-	//var mousePos = getMousePos( canvas , evt ) ;
-	//console.log( mousePos ) ;
-} , false ) ;
+		var px=data[2+strokesLength+i];
+		var py=data[2+strokesLength+dataPoints+i];
+		addPoint(px,py);
+		if(i>=data[2+strokeIndex]) {
+		   _pointerEnd();	
+		   _pointerStart();
+		   strokeIndex++;	
+		} ;
+	} ;
+	_pointerEnd();
+	showImage();
+}
 //////////////////////////////////////////////////////////
+function createUrlRedirect() {
+	var obj = {
+		"l" : query["l"],
+		"data" : toData()
+	} ;
+	document.location = "./editor.html?" + encodeURIComponent(JSON.stringify(obj));
+}
 </script>
 </body>
 </html>
