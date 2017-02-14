@@ -17,13 +17,7 @@
 
 __INCLUDES__
 
-<hr/>
-
-Editor
-
-<hr/>
-
-<a href="javascript:createUrlRedirect();">Create Url</a>
+<div onclick="createUrlRedirect()">Create Urlz</div>
 
 <hr/>
 
@@ -42,27 +36,16 @@ var maincanvas = document.getElementById( 'maincanvas' ) ;
 maincanvas.width=maincanvas.clientWidth;
 maincanvas.height=maincanvas.clientHeight;
 
-
-var ctx = maincanvas.getContext('2d');
-
 maincanvas.addEventListener( 'mousedown' , _pointerStart, false ) ;
 maincanvas.addEventListener( 'mousemove' , _pointerMove, false ) ;
 maincanvas.addEventListener( 'mouseup'   , _pointerEnd , false  ) ;
 maincanvas.addEventListener( 'mouseout'  , _pointerEnd, false   ) ;
 
-var pointerdown = false ;
-var pointerposlast = false ;
-
-//////////////////////////////////////////////////////////
-
-var x = [ ] ;
-var y = [ ] ;
-var strokes = [ ] ;
+var ctx = maincanvas.getContext( '2d' ) ;
 
 //////////////////////////////////////////////////////////
 
 var img = new Image( ) ;   
-
 
 var fitImageOn = function( canvas , imageObj ) {
 
@@ -70,164 +53,235 @@ var fitImageOn = function( canvas , imageObj ) {
 	var canvasAspectRatio = canvas.width / canvas.height;
 	var renderableHeight, renderableWidth, xStart, yStart;
 
-	if(imageAspectRatio < canvasAspectRatio) {
-		renderableHeight = canvas.height;
-		renderableWidth = imageObj.width * (renderableHeight / imageObj.height);
-		xStart = (canvas.width - renderableWidth) / 2;
+	if( imageAspectRatio < canvasAspectRatio ) {
+		renderableHeight = canvas.height ;
+		renderableWidth = imageObj.width * ( renderableHeight / imageObj.height ) ;
+		xStart = ( canvas.width - renderableWidth ) / 2 ;
 		yStart = 0;
-	} else if(imageAspectRatio > canvasAspectRatio) {
+	} else if( imageAspectRatio > canvasAspectRatio ) {
 		renderableWidth = canvas.width
-		renderableHeight = imageObj.height * (renderableWidth / imageObj.width);
-		xStart = 0;
-		yStart = (canvas.height - renderableHeight) / 2;
+		renderableHeight = imageObj.height * ( renderableWidth / imageObj.width ) ;
+		xStart = 0 ;
+		yStart = ( canvas.height - renderableHeight ) / 2 ;
 	} else {
-		renderableHeight = canvas.height;
-		renderableWidth = canvas.width;
-		xStart = 0;
-		yStart = 0;
-	};
-	ctx.drawImage(imageObj, xStart, yStart, renderableWidth, renderableHeight);
+		renderableHeight = canvas.height ;
+		renderableWidth = canvas.width ;
+		xStart = 0 ;
+		yStart = 0 ;
+	} ;
+	ctx.drawImage( imageObj , xStart , yStart , renderableWidth , renderableHeight ) ;
 };
-
-
 
 img.addEventListener( 'load' , function( ) {
 
-	fitImageOn(maincanvas, img);
-	redraw();
+	fitImageOn( maincanvas , img ) ;
+
+	if( query[ "editor" ] != null ) {
+
+		fromData( query[ "editor" ] ) ;
+		redraw( ) ;
+
+	} ;	
 
 } , false ) ;
 
-function reset() {
-	x=[];
-	y=[];
-	strokes=[];
-} ;
+img.src = query[ "l" ] ;
 
-function showImage() {
-	img.src = query["l"];
-} ;
+//////////////////////////////////////////////////////////
 
-if(query["data"]!=null) {
-	fromData(query["data"]);
-} else {
-	showImage();
-} ;
+function redraw( ) {
 
-function redraw() {
-	var strokeIndex=0;
-	var x1,y1,x2,y2;
+	console.log( "zzz" ) ;
 
-	for(var i=0;i<x.length;i++) {
-		x1=x2;
-		y1=y2;
-		x2=x[i];
-		y2=y[i];
+	var i , j ;
 
-		if(x1!=null && y1!=null) {
-			if(i<strokes[strokeIndex]) {
-				drawLine(x1,y1,x2,y2);
+	var pindex = 0 ;
+
+	for( i = 0 ; i < _pointerstrokes.length ; i++ ) {
+
+		for(j=_pointerstrokes[ i ];j>0;j--){
+
+			var pe = _pointere[ pindex ] ;
+			var px = _pointerx[ pindex ] ;
+			var py = _pointery[ pindex ] ;
+
+			
+
+			pindex++;
+
+		}
+
+
+	} ;
+
+	var index ;
+
+
+
+/*
+
+
+	var strokeIndex = 0 ;
+	var x1 , y1 , x2 , y2 ;
+
+	for( var i = 0 ; i < _pointerx.length ; i++ ) {
+
+		x1 = x2 ;
+		y1 = y2 ;
+		x2 = x[ i ] ;
+		y2 = y[ i ] ;
+
+		if( x1 != null && y1 != null ) {
+
+			if( i < strokes[ strokeIndex ] ) {
+
+				drawLine( x1 , y1 , x2 , y2 ) ;
+
 			} else {
-			   strokeIndex++;	
-			   x1=null;
-			   y1=null;
-			   x2=null;
-			   y2=null;	
+
+			   strokeIndex ++ ;	
+			   x1 = null ;
+			   y1 = null ;
+			   x2 = null ;
+			   y2 = null ;
+
 			} ;
+
 		} ;
+
 	} ;
+*/
+
 } ;
 
 //////////////////////////////////////////////////////////
-function getMousePos( canvas , evt ) {
 
-	var rect = canvas.getBoundingClientRect( ) ;
-	return {
-	  x : Math.floor( evt.clientX - rect.left ) ,
-	  y : Math.floor( evt.clientY - rect.top )
-	} ;
+function drawLine( x1 , y1 , x2 , y2 ) {
+
+	ctx.beginPath( ) ;
+	ctx.moveTo( x1 , y1 ) ;
+	ctx.lineTo( x2 , y2 ) ;
+	ctx.lineWidth = 11 ;
+	//ctx.strokeStyle = '#000000' ;
+	ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+	ctx.stroke( ) ;
+
+	ctx.beginPath( ) ;
+	ctx.moveTo( x1 , y1 ) ;
+	ctx.lineTo( x2 , y2 ) ;
+	ctx.lineWidth = 5 ;
+	ctx.strokeStyle = '#FFFFFF' ;
+	ctx.stroke( ) ;
+
 } ;
 
-function drawLine(x1,y1,x2,y2) {
-	ctx.beginPath();
-	ctx.moveTo(x1, y1);
-	ctx.lineTo(x2, y2);
-	ctx.lineWidth = 7;
+function addPoint( pe , px , py ) {	
 
-	// set line color
-	ctx.strokeStyle = '#000000';
-	ctx.stroke();
+	_pointere.push( pe ) ;
+	_pointerx.push( px ) ;
+	_pointery.push( py ) ;
 
-	ctx.beginPath();
-	ctx.moveTo(x1, y1);
-	ctx.lineTo(x2, y2);
-	ctx.lineWidth = 3;
+	_pointerstrokes[ _pointerstrokes.length - 1 ]++ ;
 
-	// set line color
-	ctx.strokeStyle = '#FFFFFF';
-	ctx.stroke();
 } ;
 
-function addPoint(px,py) {	
- x.push(px);
- y.push(py);
-} ;
+function toData( ) {
 
-function drawAndAddLine(x1,y1,x2,y2) {
-	drawLine(x1,y1,x2,y2);
-	addPoint(x2,y2); 
-} ;
+	// total strokes , stroke1 length, stroke2 length, .... , e1,x1,y1 ....
 
+	var data = [ ] ;
 
-function toData() {
-	var data = [];
+	var i , j , k ;
 
-	data.push(strokes.length);
-	data.push(x.length);
-	Array.prototype.push.apply(data,strokes);
-	Array.prototype.push.apply(data,x);
-	Array.prototype.push.apply(data,y);
+	j = _pointerstrokes.length ;
 
-	return data;
-} ;
+	data.push( j ) ;
 
-function fromData(data) {
-	reset();
+	//k = 0 ;
 
-	var strokesLength = data[0];
-	var dataPoints = data[1];
+	for( var i = 0 ; i < j ; i++ ) {
 
-	
+		data.push( _pointerstrokes[ i ] ) ;
 
-	var strokeIndex = 0;
-	_pointerStart();
-	for(var i=0;i<dataPoints;i++) {
-		
-		var px=data[2+strokesLength+i];
-		var py=data[2+strokesLength+dataPoints+i];
+		//k+=_pointerstrokes[ i ] ;
 
-		addPoint(px,py);
-		if(i>=data[2+strokeIndex]) {
-		   _pointerEnd();	
-		   _pointerStart();
-		   strokeIndex++;	
-		} ;
+	};
+
+	//console.log(k);
+	//console.log(k*3);
+
+	j = _pointerx.length ;
+
+	//console.log(j);
+	//console.log(j*3);
+
+	for( i = 0 ; i < j ; i++ ) {
+
+		data.push( _pointere[ i ] ) ;
+		data.push( _pointerx[ i ] ) ;
+		data.push( _pointery[ i ] ) ;
+
 	} ;
 
-	_pointerEnd();
-	showImage();
+	//console.log(data);
+
+	return( data ) ;
+
+} ;
+
+function fromData( data ) {
+
+	//console.log(data);
+
+	_pointerReset( ) ;
+
+	var i , j , k ;
+
+	var totalStrokes = data[ 0 ] ;
+
+	var totalPoints = 0 ;
+
+	for( i = 0 ; i < totalStrokes ; i++ ) {
+
+		j = data[ 1 + i ] ;
+
+		_pointerstrokes.push( data[ 1 + i ] ) ;
+
+		totalPoints += j ;
+
+	} ;
+
+	var t1 = totalStrokes + 1 ;
+	var t2 = t1 + ( totalPoints * 3 ) ;
+
+	//console.log(t1+" -> "+t2);
+
+	for( k = t1 ; k < t2 ; k += 3 ) {
+
+		_pointere.push( data[ k ] ) ;
+		_pointerx.push( data[ k + 1 ] ) ;
+		_pointery.push( data[ k + 2 ] ) ;
+
+	}
+
+	//console.log( _pointerstrokes ) ;
+	//console.log( _pointere) ;
+	//console.log( _pointerx) ;
+	//console.log( _pointery) ;
+
 }
 
 //////////////////////////////////////////////////////////
 
-function createUrlRedirect() {
-	var obj = {
-		"l" : query["l"],
-		"data" : toData()
-	} ;
+function createUrlRedirect( ) {
 
-	document.location = "./editor.html?" + encodeURIComponent(JSON.stringify(obj));
-}
+	query[ "editor" ] = toData( ) ;
+
+	window.location.href = "editor.html?" + encodeURIComponent( JSON.stringify( query ) ) ;
+
+	return(false);
+
+} ;
 
 
 </script>

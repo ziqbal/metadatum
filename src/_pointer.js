@@ -1,24 +1,69 @@
 
 
+var _pointerdown = false ;
+
+var _pointere = [ ] ;
+var _pointerx = [ ] ;
+var _pointery = [ ] ;
+var _pointerstrokes = [ ] ;
+
+function _pointerReset( ) {
+
+	_pointerdown = false ;
+
+	_pointere = [ ] ;
+	_pointerx = [ ] ;
+	_pointery = [ ] ;
+	_pointerstrokes = [ ] ;
+
+} ;
+
+function _pointerPos( evt ) {
+
+	var rect = maincanvas.getBoundingClientRect( ) ;
+
+	//console.log(rect);
+
+	return {
+
+	  x : Math.floor( evt.clientX - rect.left ) ,
+	  y : Math.floor( evt.clientY - rect.top )
+
+	} ;
+
+} ;
+
 
 function _pointerEnd( evt ) {
 
 	//console.log( "pointerend" ) ;
 
-	pointerdown = false ;
-	pointerposlast = false ;
+	if( _pointerdown ) {
 
-	if( x.length > 0 ) {
+		var mousePos = _pointerPos( evt ) ;
+		addPoint( "E" , mousePos.x , mousePos.y ) ;
+
+
+		//_pointerstrokes.push( 0 ) ;
+
+
+	}
+
+	_pointerdown = false ;
+	/*
+
+	if( _pointerx.length > 0 ) {
 
 		var lastStrokePos = strokes[ strokes.length-1 ] ;
 
-		if( lastStrokePos != x.length ) {
+		if( lastStrokePos != _pointerx.length ) {
 
-			strokes.push( x.length ) ;
+			_pointerstrokes.push( _pointerx.length ) ;
 
 		} ;
 
 	} ;
+	*/
 
 } ;
 
@@ -26,7 +71,13 @@ function _pointerStart( evt ) {
 
 	//console.log( "pointerstart" ) ;
 
-	pointerdown = true ;	
+	_pointerdown = true ;
+
+	_pointerstrokes.push( 0 ) ;	
+
+	var mousePos = _pointerPos( evt ) ;
+	addPoint( "S" , mousePos.x , mousePos.y ) ;
+
 
 } ;
 
@@ -34,22 +85,14 @@ function _pointerMove( evt ) {
 
 	//console.log( "pointermove" ) ;
 
-	if( pointerdown ) {
+	if( _pointerdown ) {
 
-		var mousePos = getMousePos( maincanvas , evt ) ;
+		var mousePos = _pointerPos( evt ) ;
 	
-		if( pointerposlast !== false ) {
+		drawLine( _pointerx[ _pointerx.length - 1 ] , _pointery[ _pointery.length - 1 ]  ,  mousePos.x , mousePos.y ) ;
 
-			drawAndAddLine( pointerposlast.x , pointerposlast.y , mousePos.x , mousePos.y ) ;
-
-		} else {
-
-			addPoint( mousePos.x , mousePos.y ) ;
-
-		} ;
+		addPoint( "M" , mousePos.x , mousePos.y ) ;
 		
-		pointerposlast = mousePos ;
-
 	} ;
 
 } ;
