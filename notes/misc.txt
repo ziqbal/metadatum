@@ -1,5 +1,8 @@
 
 
+http://stackoverflow.com/questions/4278053/google-static-maps-url-length-limit
+2048 characters in size
+
 image on internet
 superimpose squiggles
 script tag with ?
