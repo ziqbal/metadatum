@@ -25,8 +25,8 @@
 
 	if( e == "jpg" || e == "png" ) {
 
-		w.location.href = "http://127.0.0.1/_craft_/metadatum/dist/editor.html?" + encodeURIComponent( JSON.stringify( y ) ) ;
-		//w.location.href = "https://igwfband.github.io/editor.html?" + encodeURIComponent( JSON.stringify( y ) ) ;
+		//w.location.href = "http://127.0.0.1/_craft_/metadatum/dist/editor.html?" + encodeURIComponent( JSON.stringify( y ) ) ;
+		w.location.href = "https://igwfband.github.io/editor.html?" + encodeURIComponent( JSON.stringify( y ) ) ;
 
 	} else {
 

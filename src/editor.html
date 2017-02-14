@@ -17,7 +17,7 @@
 
 __INCLUDES__
 
-<div onclick="createUrlRedirect()">Create Urlz</div>
+<div onclick="createUrlRedirect()">Create Url</div>
 
 <hr/>
 
@@ -27,7 +27,7 @@ __INCLUDES__
 
 var query = JSON.parse( decodeURIComponent( window.location.search ).slice( 1 ) ) ;
 
-console.log( query ) ;
+//console.log( query ) ;
 
 //////////////////////////////////////////////////////////
 
@@ -91,67 +91,34 @@ img.src = query[ "l" ] ;
 
 function redraw( ) {
 
-	console.log( "zzz" ) ;
-
 	var i , j ;
 
 	var pindex = 0 ;
 
+	var x1 , y1 ;
+
 	for( i = 0 ; i < _pointerstrokes.length ; i++ ) {
 
-		for(j=_pointerstrokes[ i ];j>0;j--){
+		for( j = _pointerstrokes[ i ] ; j > 0 ; j-- ) {
 
 			var pe = _pointere[ pindex ] ;
 			var px = _pointerx[ pindex ] ;
 			var py = _pointery[ pindex ] ;
 
+			if( pe != "S" ) {
 
-			ctx.fillRect(px,py, 10, 10);
-
-
-			pindex++;
-
-		}
-
-
-	} ;
-
-
-
-
-/*
-
-
-	var strokeIndex = 0 ;
-	var x1 , y1 , x2 , y2 ;
-
-	for( var i = 0 ; i < _pointerx.length ; i++ ) {
-
-		x1 = x2 ;
-		y1 = y2 ;
-		x2 = x[ i ] ;
-		y2 = y[ i ] ;
-
-		if( x1 != null && y1 != null ) {
-
-			if( i < strokes[ strokeIndex ] ) {
-
-				drawLine( x1 , y1 , x2 , y2 ) ;
-
-			} else {
-
-			   strokeIndex ++ ;	
-			   x1 = null ;
-			   y1 = null ;
-			   x2 = null ;
-			   y2 = null ;
+				drawLine( x1,y1 , px , py ) ;
 
 			} ;
+
+			x1 = px ;
+			y1 = py ;
+
+			pindex++ ;
 
 		} ;
 
 	} ;
-*/
 
 } ;
 

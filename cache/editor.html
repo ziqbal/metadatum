@@ -70,12 +70,12 @@ function _pointerMove( evt ) {
 		
 	} ;
 } ;</script>
-<div onclick="createUrlRedirect()">Create Urlz</div>
+<div onclick="createUrlRedirect()">Create Url</div>
 <hr/>
 <canvas id="maincanvas" width="123" height="321">
 <script>
 var query = JSON.parse( decodeURIComponent( window.location.search ).slice( 1 ) ) ;
-console.log( query ) ;
+//console.log( query ) ;
 //////////////////////////////////////////////////////////
 var maincanvas = document.getElementById( 'maincanvas' ) ;
 maincanvas.width=maincanvas.clientWidth;
@@ -119,28 +119,22 @@ img.addEventListener( 'load' , function( ) {
 img.src = query[ "l" ] ;
 //////////////////////////////////////////////////////////
 function redraw( ) {
-	console.log("zzz");
-/*
-	var strokeIndex = 0 ;
-	var x1 , y1 , x2 , y2 ;
-	for( var i = 0 ; i < _pointerx.length ; i++ ) {
-		x1 = x2 ;
-		y1 = y2 ;
-		x2 = x[ i ] ;
-		y2 = y[ i ] ;
-		if( x1 != null && y1 != null ) {
-			if( i < strokes[ strokeIndex ] ) {
-				drawLine( x1 , y1 , x2 , y2 ) ;
-			} else {
-			   strokeIndex ++ ;	
-			   x1 = null ;
-			   y1 = null ;
-			   x2 = null ;
-			   y2 = null ;
+	var i , j ;
+	var pindex = 0 ;
+	var x1 , y1 ;
+	for( i = 0 ; i < _pointerstrokes.length ; i++ ) {
+		for( j = _pointerstrokes[ i ] ; j > 0 ; j-- ) {
+			var pe = _pointere[ pindex ] ;
+			var px = _pointerx[ pindex ] ;
+			var py = _pointery[ pindex ] ;
+			if( pe != "S" ) {
+				drawLine( x1,y1 , px , py ) ;
 			} ;
+			x1 = px ;
+			y1 = py ;
+			pindex++ ;
 		} ;
 	} ;
-*/
 } ;
 //////////////////////////////////////////////////////////
 function drawLine( x1 , y1 , x2 , y2 ) {
