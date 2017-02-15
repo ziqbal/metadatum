@@ -1,5 +1,14 @@
 
 
+
+TODO:-
+* a clear button
+* copy link to clipboard for easy sharing
+* compression
+* tablet touch 
+* maybe colour
+
+
 http://stackoverflow.com/questions/4278053/google-static-maps-url-length-limit
 2048 characters in size
 
