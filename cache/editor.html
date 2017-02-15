@@ -8,10 +8,15 @@
 <title>Editor</title>
 </head>
 <body>
+<style>html, body {
+width: 100%;
+			height: 100%;
+			margin: 0px;
+			border: 0;
+			overflow: hidden; /*  Disable scrollbars */
+			display: block;  /* No floating content on sides */
+}</style>
 <style>#maincanvas {
-	border : 3px dotted #F00 ;
-	width : 640px ;
-	height : 480px ;
     padding: 0;
     margin: auto;
     display: block;
@@ -70,16 +75,20 @@ function _pointerMove( evt ) {
 		
 	} ;
 } ;</script>
-<div onclick="createUrlRedirect()">Create Url</div>
-<hr/>
 <canvas id="maincanvas" width="123" height="321">
 <script>
 var query = JSON.parse( decodeURIComponent( window.location.search ).slice( 1 ) ) ;
 //console.log( query ) ;
 //////////////////////////////////////////////////////////
 var maincanvas = document.getElementById( 'maincanvas' ) ;
-maincanvas.width=maincanvas.clientWidth;
-maincanvas.height=maincanvas.clientHeight;
+maincanvas.style.width = window.innerWidth + 'px';
+maincanvas.style.height = window.innerHeight+ 'px';
+//ctx.canvas.width  = window.innerWidth;
+//ctx.canvas.height = window.innerHeight;
+maincanvas.width=window.innerWidth;
+maincanvas.height=window.innerHeight;
+//maincanvas.width=maincanvas.clientWidth;
+//maincanvas.height=maincanvas.clientHeight;
 maincanvas.addEventListener( 'mousedown' , _pointerStart, false ) ;
 maincanvas.addEventListener( 'mousemove' , _pointerMove, false ) ;
 maincanvas.addEventListener( 'mouseup'   , _pointerEnd , false  ) ;
@@ -110,13 +119,35 @@ var fitImageOn = function( canvas , imageObj ) {
 	ctx.drawImage( imageObj , xStart , yStart , renderableWidth , renderableHeight ) ;
 };
 img.addEventListener( 'load' , function( ) {
+	imageInit( ) ;
+} , false ) ;
+function imageInit( ) {
 	fitImageOn( maincanvas , img ) ;
 	if( query[ "editor" ] != null ) {
 		fromData( query[ "editor" ] ) ;
 		redraw( ) ;
 	} ;	
-} , false ) ;
+}
 img.src = query[ "l" ] ;
+initialize( ) ;
+function initialize( ) {
+	window.addEventListener('resize', resizeCanvas, false);
+	resizeCanvas();
+}
+			
+function resizeCanvas( ) {
+	var oldw = maincanvas.width ;
+	var oldh = maincanvas.height ;
+	var neww = window.innerWidth ;
+	var newh = window.innerHeight ;
+	maincanvas.width = window.innerWidth;
+	maincanvas.height = window.innerHeight;
+	maincanvas.style.width = window.innerWidth + 'px';
+	maincanvas.style.height = window.innerHeight + 'px';
+	fitImageOn( maincanvas , img ) ;
+	redraw( ) ;
+	console.log( oldw + "," + oldh + " -> " + neww + "," + newh ) ;
+}
 //////////////////////////////////////////////////////////
 function redraw( ) {
 	var i , j ;

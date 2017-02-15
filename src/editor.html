@@ -17,9 +17,6 @@
 
 __INCLUDES__
 
-<div onclick="createUrlRedirect()">Create Url</div>
-
-<hr/>
 
 <canvas id="maincanvas" width="123" height="321">
 
@@ -33,8 +30,18 @@ var query = JSON.parse( decodeURIComponent( window.location.search ).slice( 1 ) 
 
 var maincanvas = document.getElementById( 'maincanvas' ) ;
 
-maincanvas.width=maincanvas.clientWidth;
-maincanvas.height=maincanvas.clientHeight;
+maincanvas.style.width = window.innerWidth + 'px';
+maincanvas.style.height = window.innerHeight+ 'px';
+
+
+//ctx.canvas.width  = window.innerWidth;
+//ctx.canvas.height = window.innerHeight;
+
+maincanvas.width=window.innerWidth;
+maincanvas.height=window.innerHeight;
+
+//maincanvas.width=maincanvas.clientWidth;
+//maincanvas.height=maincanvas.clientHeight;
 
 maincanvas.addEventListener( 'mousedown' , _pointerStart, false ) ;
 maincanvas.addEventListener( 'mousemove' , _pointerMove, false ) ;
@@ -42,6 +49,11 @@ maincanvas.addEventListener( 'mouseup'   , _pointerEnd , false  ) ;
 maincanvas.addEventListener( 'mouseout'  , _pointerEnd, false   ) ;
 
 var ctx = maincanvas.getContext( '2d' ) ;
+
+
+
+
+
 
 //////////////////////////////////////////////////////////
 
@@ -74,6 +86,12 @@ var fitImageOn = function( canvas , imageObj ) {
 
 img.addEventListener( 'load' , function( ) {
 
+	imageInit( ) ;
+
+} , false ) ;
+
+function imageInit( ) {
+
 	fitImageOn( maincanvas , img ) ;
 
 	if( query[ "editor" ] != null ) {
@@ -82,10 +100,36 @@ img.addEventListener( 'load' , function( ) {
 		redraw( ) ;
 
 	} ;	
-
-} , false ) ;
+}
 
 img.src = query[ "l" ] ;
+
+
+initialize( ) ;
+
+function initialize( ) {
+	window.addEventListener('resize', resizeCanvas, false);
+	resizeCanvas();
+}
+			
+function resizeCanvas( ) {
+
+	var oldw = maincanvas.width ;
+	var oldh = maincanvas.height ;
+	var neww = window.innerWidth ;
+	var newh = window.innerHeight ;
+
+	maincanvas.width = window.innerWidth;
+	maincanvas.height = window.innerHeight;
+	maincanvas.style.width = window.innerWidth + 'px';
+	maincanvas.style.height = window.innerHeight + 'px';
+
+	fitImageOn( maincanvas , img ) ;
+	redraw( ) ;
+
+	console.log( oldw + "," + oldh + " -> " + neww + "," + newh ) ;
+
+}
 
 //////////////////////////////////////////////////////////
 
