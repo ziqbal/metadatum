@@ -8,18 +8,18 @@
 <title>Editor</title>
 </head>
 <body>
-<style>html, body {
-width: 100%;
-			height: 100%;
-			margin: 0px;
-			border: 0;
-			overflow: hidden; /*  Disable scrollbars */
-			display: block;  /* No floating content on sides */
+<style>html , body {
+	width : 100% ;
+	height : 100% ;
+	margin : 0px ;
+	border : 0 ;
+	overflow : hidden ;
+	display : block ; 
 }</style>
 <style>#maincanvas {
-    padding: 0;
-    margin: auto;
-    display: block;
+    padding : 0 ;
+    margin : auto ;
+    display : block ;
 }</style>
 <script>var _pointerdown = false ;
 var _pointere = [ ] ;
@@ -140,13 +140,16 @@ function resizeCanvas( ) {
 	var oldh = maincanvas.height ;
 	var neww = window.innerWidth ;
 	var newh = window.innerHeight ;
+	console.log( oldw + "," + oldh + " -> " + neww + "," + newh ) ;
 	maincanvas.width = window.innerWidth;
 	maincanvas.height = window.innerHeight;
 	maincanvas.style.width = window.innerWidth + 'px';
 	maincanvas.style.height = window.innerHeight + 'px';
 	fitImageOn( maincanvas , img ) ;
+	var iw = img.width ;
+	var ih = img.height ;
+	console.log( iw + "," + ih ) ;
 	redraw( ) ;
-	console.log( oldw + "," + oldh + " -> " + neww + "," + newh ) ;
 }
 //////////////////////////////////////////////////////////
 function redraw( ) {

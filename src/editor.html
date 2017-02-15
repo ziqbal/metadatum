@@ -119,15 +119,21 @@ function resizeCanvas( ) {
 	var neww = window.innerWidth ;
 	var newh = window.innerHeight ;
 
+	console.log( oldw + "," + oldh + " -> " + neww + "," + newh ) ;
+
 	maincanvas.width = window.innerWidth;
 	maincanvas.height = window.innerHeight;
 	maincanvas.style.width = window.innerWidth + 'px';
 	maincanvas.style.height = window.innerHeight + 'px';
 
 	fitImageOn( maincanvas , img ) ;
-	redraw( ) ;
 
-	console.log( oldw + "," + oldh + " -> " + neww + "," + newh ) ;
+	var iw = img.width ;
+	var ih = img.height ;
+
+	//console.log( iw + "," + ih ) ;
+
+	redraw( ) ;
 
 }
 
