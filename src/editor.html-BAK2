@@ -1,0 +1,309 @@
+<!doctype html>
+
+<html class="no-js" lang="">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="description" content="">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<title>Editor</title>
+
+</head>
+
+<body>
+
+__INCLUDES__
+
+
+<canvas id="maincanvas" width="123" height="321">
+
+<script>
+
+var query = JSON.parse( decodeURIComponent( window.location.search ).slice( 1 ) ) ;
+
+//console.log( query ) ;
+
+//////////////////////////////////////////////////////////
+
+var maincanvas = document.getElementById( 'maincanvas' ) ;
+
+maincanvas.style.width = window.innerWidth + 'px';
+maincanvas.style.height = window.innerHeight+ 'px';
+
+
+//ctx.canvas.width  = window.innerWidth;
+//ctx.canvas.height = window.innerHeight;
+
+maincanvas.width=window.innerWidth;
+maincanvas.height=window.innerHeight;
+
+//maincanvas.width=maincanvas.clientWidth;
+//maincanvas.height=maincanvas.clientHeight;
+
+maincanvas.addEventListener( 'mousedown' , _pointerStart, false ) ;
+maincanvas.addEventListener( 'mousemove' , _pointerMove, false ) ;
+maincanvas.addEventListener( 'mouseup'   , _pointerEnd , false  ) ;
+maincanvas.addEventListener( 'mouseout'  , _pointerEnd, false   ) ;
+
+var ctx = maincanvas.getContext( '2d' ) ;
+
+
+
+
+
+
+//////////////////////////////////////////////////////////
+
+var img = new Image( ) ;   
+
+var fitImageOn = function( canvas , imageObj ) {
+
+	var imageAspectRatio = imageObj.width / imageObj.height;
+	var canvasAspectRatio = canvas.width / canvas.height;
+	var renderableHeight, renderableWidth, xStart, yStart;
+
+	if( imageAspectRatio < canvasAspectRatio ) {
+		renderableHeight = canvas.height ;
+		renderableWidth = imageObj.width * ( renderableHeight / imageObj.height ) ;
+		xStart = ( canvas.width - renderableWidth ) / 2 ;
+		yStart = 0;
+	} else if( imageAspectRatio > canvasAspectRatio ) {
+		renderableWidth = canvas.width
+		renderableHeight = imageObj.height * ( renderableWidth / imageObj.width ) ;
+		xStart = 0 ;
+		yStart = ( canvas.height - renderableHeight ) / 2 ;
+	} else {
+		renderableHeight = canvas.height ;
+		renderableWidth = canvas.width ;
+		xStart = 0 ;
+		yStart = 0 ;
+	} ;
+	ctx.drawImage( imageObj , xStart , yStart , renderableWidth , renderableHeight ) ;
+};
+
+img.addEventListener( 'load' , function( ) {
+
+	imageInit( ) ;
+
+} , false ) ;
+
+function imageInit( ) {
+
+	fitImageOn( maincanvas , img ) ;
+
+	if( query[ "editor" ] != null ) {
+
+		fromData( query[ "editor" ] ) ;
+		redraw( ) ;
+
+	} ;	
+}
+
+img.src = query[ "l" ] ;
+
+
+initialize( ) ;
+
+function initialize( ) {
+	window.addEventListener('resize', resizeCanvas, false);
+	resizeCanvas();
+}
+			
+function resizeCanvas( ) {
+
+	var oldw = maincanvas.width ;
+	var oldh = maincanvas.height ;
+	var neww = window.innerWidth ;
+	var newh = window.innerHeight ;
+
+	console.log( oldw + "," + oldh + " -> " + neww + "," + newh ) ;
+
+	maincanvas.width = window.innerWidth;
+	maincanvas.height = window.innerHeight;
+	maincanvas.style.width = window.innerWidth + 'px';
+	maincanvas.style.height = window.innerHeight + 'px';
+
+	fitImageOn( maincanvas , img ) ;
+
+	var iw = img.width ;
+	var ih = img.height ;
+
+	//console.log( iw + "," + ih ) ;
+
+	redraw( ) ;
+
+}
+
+//////////////////////////////////////////////////////////
+
+function redraw( ) {
+
+	var i , j ;
+
+	var pindex = 0 ;
+
+	var x1 , y1 ;
+
+	for( i = 0 ; i < _pointerstrokes.length ; i++ ) {
+
+		for( j = _pointerstrokes[ i ] ; j > 0 ; j-- ) {
+
+			var pe = _pointere[ pindex ] ;
+			var px = _pointerx[ pindex ] ;
+			var py = _pointery[ pindex ] ;
+
+			if( pe != "S" ) {
+
+				drawLine( x1,y1 , px , py ) ;
+
+			} ;
+
+			x1 = px ;
+			y1 = py ;
+
+			pindex++ ;
+
+		} ;
+
+	} ;
+
+} ;
+
+//////////////////////////////////////////////////////////
+
+function drawLine( x1 , y1 , x2 , y2 ) {
+
+	ctx.beginPath( ) ;
+	ctx.moveTo( x1 , y1 ) ;
+	ctx.lineTo( x2 , y2 ) ;
+	ctx.lineWidth = 11 ;
+	//ctx.strokeStyle = '#000000' ;
+	ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+	ctx.stroke( ) ;
+
+	ctx.beginPath( ) ;
+	ctx.moveTo( x1 , y1 ) ;
+	ctx.lineTo( x2 , y2 ) ;
+	ctx.lineWidth = 5 ;
+	ctx.strokeStyle = '#FFFFFF' ;
+	ctx.stroke( ) ;
+
+} ;
+
+function addPoint( pe , px , py ) {	
+
+	_pointere.push( pe ) ;
+	_pointerx.push( px ) ;
+	_pointery.push( py ) ;
+
+	_pointerstrokes[ _pointerstrokes.length - 1 ]++ ;
+
+} ;
+
+function toData( ) {
+
+	// total strokes , stroke1 length, stroke2 length, .... , e1,x1,y1 ....
+
+	var data = [ ] ;
+
+	var i , j , k ;
+
+	j = _pointerstrokes.length ;
+
+	data.push( j ) ;
+
+	//k = 0 ;
+
+	for( var i = 0 ; i < j ; i++ ) {
+
+		data.push( _pointerstrokes[ i ] ) ;
+
+		//k+=_pointerstrokes[ i ] ;
+
+	};
+
+	//console.log(k);
+	//console.log(k*3);
+
+	j = _pointerx.length ;
+
+	//console.log(j);
+	//console.log(j*3);
+
+	for( i = 0 ; i < j ; i++ ) {
+
+		data.push( _pointere[ i ] ) ;
+		data.push( _pointerx[ i ] ) ;
+		data.push( _pointery[ i ] ) ;
+
+	} ;
+
+	//console.log(data);
+
+	return( data ) ;
+
+} ;
+
+function fromData( data ) {
+
+	//console.log(data);
+
+	_pointerReset( ) ;
+
+	var i , j , k ;
+
+	var totalStrokes = data[ 0 ] ;
+
+	var totalPoints = 0 ;
+
+	for( i = 0 ; i < totalStrokes ; i++ ) {
+
+		j = data[ 1 + i ] ;
+
+		_pointerstrokes.push( data[ 1 + i ] ) ;
+
+		totalPoints += j ;
+
+	} ;
+
+	var t1 = totalStrokes + 1 ;
+	var t2 = t1 + ( totalPoints * 3 ) ;
+
+	//console.log(t1+" -> "+t2);
+
+	for( k = t1 ; k < t2 ; k += 3 ) {
+
+		_pointere.push( data[ k ] ) ;
+		_pointerx.push( data[ k + 1 ] ) ;
+		_pointery.push( data[ k + 2 ] ) ;
+
+	}
+
+	//console.log( _pointerstrokes ) ;
+	//console.log( _pointere) ;
+	//console.log( _pointerx) ;
+	//console.log( _pointery) ;
+
+}
+
+//////////////////////////////////////////////////////////
+
+function createUrlRedirect( ) {
+
+	query[ "editor" ] = toData( ) ;
+
+	window.location.href = "editor.html?" + encodeURIComponent( JSON.stringify( query ) ) ;
+
+	return(false);
+
+} ;
+
+
+</script>
+
+
+</body>
+</html>

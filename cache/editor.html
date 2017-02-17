@@ -8,92 +8,244 @@
 <title>Editor</title>
 </head>
 <body>
-<style>html , body {
-	width : 100% ;
-	height : 100% ;
-	margin : 0px ;
-	border : 0 ;
-	overflow : hidden ;
-	display : block ; 
-}</style>
 <style>#maincanvas {
-    padding : 0 ;
-    margin : auto ;
-    display : block ;
+	border : 3px dotted #F00 ;
+	width : 640px ;
+	height : 480px ;
+    padding: 0;
+    margin: auto;
+    display: block;
 }</style>
-<script>var _pointerdown = false ;
-var _pointere = [ ] ;
-var _pointerx = [ ] ;
-var _pointery = [ ] ;
-var _pointerstrokes = [ ] ;
-function _pointerReset( ) {
-	_pointerdown = false ;
-	_pointere = [ ] ;
-	_pointerx = [ ] ;
-	_pointery = [ ] ;
-	_pointerstrokes = [ ] ;
-} ;
-function _pointerPos( evt ) {
-	var rect = maincanvas.getBoundingClientRect( ) ;
-	//console.log(rect);
-	return {
-	  x : Math.floor( evt.clientX - rect.left ) ,
-	  y : Math.floor( evt.clientY - rect.top )
-	} ;
-} ;
-function _pointerEnd( evt ) {
-	//console.log( "pointerend" ) ;
-	if( _pointerdown ) {
-		var mousePos = _pointerPos( evt ) ;
-		addPoint( "E" , mousePos.x , mousePos.y ) ;
-		//_pointerstrokes.push( 0 ) ;
-	}
-	_pointerdown = false ;
-	/*
-	if( _pointerx.length > 0 ) {
-		var lastStrokePos = strokes[ strokes.length-1 ] ;
-		if( lastStrokePos != _pointerx.length ) {
-			_pointerstrokes.push( _pointerx.length ) ;
-		} ;
-	} ;
-	*/
-} ;
-function _pointerStart( evt ) {
-	//console.log( "pointerstart" ) ;
-	_pointerdown = true ;
-	_pointerstrokes.push( 0 ) ;	
-	var mousePos = _pointerPos( evt ) ;
-	addPoint( "S" , mousePos.x , mousePos.y ) ;
-} ;
-function _pointerMove( evt ) {
-	//console.log( "pointermove" ) ;
-	if( _pointerdown ) {
-		var mousePos = _pointerPos( evt ) ;
-	
-		drawLine( _pointerx[ _pointerx.length - 1 ] , _pointery[ _pointery.length - 1 ]  ,  mousePos.x , mousePos.y ) ;
-		addPoint( "M" , mousePos.x , mousePos.y ) ;
-		
-	} ;
-} ;</script>
+<A HREF="javascript:reset();">Clear</A> <BR/>
+<A HREF="javascript:createUrlRedirect();">Create -> Copy Url -> Redirect to Url</A> <BR/<>
+<A HREF="javascript:gotoUrlShortener('https://bitly.com');">Create Url -> Copy Url -> Goto https://bitly.com</A> <BR/>
+<A HREF="javascript:gotoUrlShortener('https://goo.gl');">Create Url -> Copy Url -> Goto https://goo.gl</A> 
+<textarea id="url" rows="1" cols="1024"></textarea>
 <canvas id="maincanvas" width="123" height="321">
 <script>
+var LZString=function(){function o(o,r){if(!t[o]){t[o]={};for(var n=0;n<o.length;n++)t[o][o.charAt(n)]=n}return t[o][r]}var r=String.fromCharCode,n="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",e="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+-$",t={},i={compressToBase64:function(o){if(null==o)return"";var r=i._compress(o,6,function(o){return n.charAt(o)});switch(r.length%4){default:case 0:return r;case 1:return r+"===";case 2:return r+"==";case 3:return r+"="}},decompressFromBase64:function(r){return null==r?"":""==r?null:i._decompress(r.length,32,function(e){return o(n,r.charAt(e))})},compressToUTF16:function(o){return null==o?"":i._compress(o,15,function(o){return r(o+32)})+" "},decompressFromUTF16:function(o){return null==o?"":""==o?null:i._decompress(o.length,16384,function(r){return o.charCodeAt(r)-32})},compressToUint8Array:function(o){for(var r=i.compress(o),n=new Uint8Array(2*r.length),e=0,t=r.length;t>e;e++){var s=r.charCodeAt(e);n[2*e]=s>>>8,n[2*e+1]=s%256}return n},decompressFromUint8Array:function(o){if(null===o||void 0===o)return i.decompress(o);for(var n=new Array(o.length/2),e=0,t=n.length;t>e;e++)n[e]=256*o[2*e]+o[2*e+1];var s=[];return n.forEach(function(o){s.push(r(o))}),i.decompress(s.join(""))},compressToEncodedURIComponent:function(o){return null==o?"":i._compress(o,6,function(o){return e.charAt(o)})},decompressFromEncodedURIComponent:function(r){return null==r?"":""==r?null:(r=r.replace(/ /g,"+"),i._decompress(r.length,32,function(n){return o(e,r.charAt(n))}))},compress:function(o){return i._compress(o,16,function(o){return r(o)})},_compress:function(o,r,n){if(null==o)return"";var e,t,i,s={},p={},u="",c="",a="",l=2,f=3,h=2,d=[],m=0,v=0;for(i=0;i<o.length;i+=1)if(u=o.charAt(i),Object.prototype.hasOwnProperty.call(s,u)||(s[u]=f++,p[u]=!0),c=a+u,Object.prototype.hasOwnProperty.call(s,c))a=c;else{if(Object.prototype.hasOwnProperty.call(p,a)){if(a.charCodeAt(0)<256){for(e=0;h>e;e++)m<<=1,v==r-1?(v=0,d.push(n(m)),m=0):v++;for(t=a.charCodeAt(0),e=0;8>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}else{for(t=1,e=0;h>e;e++)m=m<<1|t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t=0;for(t=a.charCodeAt(0),e=0;16>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}l--,0==l&&(l=Math.pow(2,h),h++),delete p[a]}else for(t=s[a],e=0;h>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;l--,0==l&&(l=Math.pow(2,h),h++),s[c]=f++,a=String(u)}if(""!==a){if(Object.prototype.hasOwnProperty.call(p,a)){if(a.charCodeAt(0)<256){for(e=0;h>e;e++)m<<=1,v==r-1?(v=0,d.push(n(m)),m=0):v++;for(t=a.charCodeAt(0),e=0;8>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}else{for(t=1,e=0;h>e;e++)m=m<<1|t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t=0;for(t=a.charCodeAt(0),e=0;16>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1}l--,0==l&&(l=Math.pow(2,h),h++),delete p[a]}else for(t=s[a],e=0;h>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;l--,0==l&&(l=Math.pow(2,h),h++)}for(t=2,e=0;h>e;e++)m=m<<1|1&t,v==r-1?(v=0,d.push(n(m)),m=0):v++,t>>=1;for(;;){if(m<<=1,v==r-1){d.push(n(m));break}v++}return d.join("")},decompress:function(o){return null==o?"":""==o?null:i._decompress(o.length,32768,function(r){return o.charCodeAt(r)})},_decompress:function(o,n,e){var t,i,s,p,u,c,a,l,f=[],h=4,d=4,m=3,v="",w=[],A={val:e(0),position:n,index:1};for(i=0;3>i;i+=1)f[i]=i;for(p=0,c=Math.pow(2,2),a=1;a!=c;)u=A.val&A.position,A.position>>=1,0==A.position&&(A.position=n,A.val=e(A.index++)),p|=(u>0?1:0)*a,a<<=1;switch(t=p){case 0:for(p=0,c=Math.pow(2,8),a=1;a!=c;)u=A.val&A.position,A.position>>=1,0==A.position&&(A.position=n,A.val=e(A.index++)),p|=(u>0?1:0)*a,a<<=1;l=r(p);break;case 1:for(p=0,c=Math.pow(2,16),a=1;a!=c;)u=A.val&A.position,A.position>>=1,0==A.position&&(A.position=n,A.val=e(A.index++)),p|=(u>0?1:0)*a,a<<=1;l=r(p);break;case 2:return""}for(f[3]=l,s=l,w.push(l);;){if(A.index>o)return"";for(p=0,c=Math.pow(2,m),a=1;a!=c;)u=A.val&A.position,A.position>>=1,0==A.position&&(A.position=n,A.val=e(A.index++)),p|=(u>0?1:0)*a,a<<=1;switch(l=p){case 0:for(p=0,c=Math.pow(2,8),a=1;a!=c;)u=A.val&A.position,A.position>>=1,0==A.position&&(A.position=n,A.val=e(A.index++)),p|=(u>0?1:0)*a,a<<=1;f[d++]=r(p),l=d-1,h--;break;case 1:for(p=0,c=Math.pow(2,16),a=1;a!=c;)u=A.val&A.position,A.position>>=1,0==A.position&&(A.position=n,A.val=e(A.index++)),p|=(u>0?1:0)*a,a<<=1;f[d++]=r(p),l=d-1,h--;break;case 2:return w.join("")}if(0==h&&(h=Math.pow(2,m),m++),f[l])v=f[l];else{if(l!==d)return null;v=s+s.charAt(0)}w.push(v),f[d++]=s+v.charAt(0),h--,s=v,0==h&&(h=Math.pow(2,m),m++)}}};return i}();"function"==typeof define&&define.amd?define(function(){return LZString}):"undefined"!=typeof module&&null!=module&&(module.exports=LZString);
+function toRGBA(color) {
+	return [0,0,0,0]; //TODO
+} ;
+function toColor(rgba) {
+	return "FFFFFFFF"; // TODO
+} ;
+function getCurrentPenColor() {
+	return "FFFFFFFF"; // TODO
+}
+function toPoint(event,canvas) {
+	var rect = canvas.getBoundingClientRect( ) ;
+	
+	var p = new Point(
+					Math.floor( event.clientX - rect.left ),
+					Math.floor( event.clientY - rect.top ),
+					getCurrentPenColor() );
+	return p;
+}
+function registerCanvasListeners(canvas,data) {
+	canvas.addEventListener( 'mousedown' , function(event) {
+		data.newStroke(1,toPoint(event,canvas));
+	}, false ) ;
+	canvas.addEventListener( 'mousemove' , function(event) {
+		data.addPointToStroke(1,toPoint(event,canvas));
+	}, false ) ;
+	canvas.addEventListener( 'mouseup'   , function(event) {
+		data.endStroke(1,toPoint(event,canvas));
+	}, false ) ;
+	canvas.addEventListener( 'mouseout'  , function(event) {
+		data.endStroke(1,toPoint(event,canvas));
+	}, false ) ;
+}
+function Point(x,y,color) {
+    
+    this.x = x;
+    
+    this.y = y;
+    
+    this.color = color;
+    this.rgba  = toRGBA(color);
+    this.getRGBA = function() {
+    	return "rgba(0,0,0,0.5)";
+    	//TODO
+    /*	return "rgba(" + 
+    		   + this.rgba[0] + "," 
+    		   + this.rgba[1] + ","
+    		   + this.rgba[3] + ","
+    		   + this.rgba[4]/255 + ")"; */
+    } ;
+    return this;
+} ;
+function Stroke() {
+	this.points = [];
+	
+	this.addPoint = function(p) {
+						this.points.push(p);
+					} ;
+	this.getLastPoint = function() {
+							if(this.points.length==0) {
+								return undefined;
+							} ; 
+							
+							return this.points[this.points.length-1];
+						} ;
+	this.clear = function() {
+		this.points = [];
+	} ;
+	return this;					
+} ;
+function Data(drawLineFn) {
+	this.drawLineFn = drawLineFn ;
+	this.strokes = [];
+	this.currentStrokes = {};
+	
+	this.clear = function() {
+		this.strokes = [];
+		this.currentStrokes = {};		
+	} ;
+	this.getCurrentStroke = function(strokeId) {
+		return this.currentStrokes[strokeId];
+	} ;
+	this.removeCurrentStroke = function(strokeId) {
+		this.currentStrokes[strokeId]=undefined;
+	} ;
+	this.resetCurrentStroke = function(strokeId) {
+		this.currentStrokes[strokeId]=new Stroke();
+	} ;
+	this.addPointToStroke = function(strokeId,p) {
+		var currentStroke = this.getCurrentStroke(strokeId);
+		if(currentStroke) {
+			var lastPoint = currentStroke.getLastPoint();
+			currentStroke.addPoint(p);
+			if(lastPoint && this.drawLineFn) {
+				this.drawLineFn(lastPoint,p);
+			} ;
+		} ;		
+	} ;
+	this.newStroke = function( strokeId, p ) {
+		this.resetCurrentStroke(strokeId);
+		this.addPointToStroke(strokeId,p);
+	} ;
+	this.endStroke = function(strokeId,p) {
+		this.addPointToStroke(strokeId,p);
+		var currentStroke = this.getCurrentStroke(strokeId);
+		if(currentStroke) {
+				this.strokes.push(currentStroke);	
+		} ;
+		this.removeCurrentStroke(strokeId);
+	}
+/*
+PACK format :-
+	(1) strokeCount, 
+	(2) strokePointsCount, 
+	(3) x1,(x2-x1),..., 
+	(4) y1,(y2-y1)...., 
+	(5) red1,(red2-red1).....,
+	(6) green1,(green2-green1).....,
+	(7) blue1,(blue2-blue1).....,
+	(8) alpha1,(alpha2-alpha1)..... 
+*/
+	this.pack = function() {
+		var data = [];
+		//	(1) strokeCount, 
+		data.push(this.strokes.length);
+		for(var i=0;i<this.strokes.length;i++) {
+			var points = this.strokes[i].points;
+			// (2) strokePointsCount
+			data.push(points.length);
+			// (3) x1,(x2-x1),..., 
+			data.push( points[0].x );	
+			for(var j=1;j<points.length;j++) {
+				data.push( points[j].x - points[j-1].x);
+			} ;
+			// (4) y1,(y2-y1)...., 
+			data.push( points[0].y );	
+			for(var j=1;j<points.length;j++) {
+				data.push( points[j].y - points[j-1].y);
+			} ;
+			
+			// (5) red1,(red2-red1).....,
+			// (6) green1,(green2-green1).....,
+			// (7) blue1,(blue2-blue1).....,
+			// (8) alpha1,(alpha2-alpha1)..... 
+			for(var c=0;c<4;c++) {
+				data.push( points[0].rgba[c] );	
+				for(var j=1;j<points.length;j++) {
+					data.push( points[j].rgba[c] - points[j-1].rgba[c]);
+				} ;
+			} ;
+			
+		} ;
+		return data;
+	} ;
+	this.unpack = function(data) {
+		this.clear();
+		var idx=0;
+		//	(1) strokeCount,
+		var strokeCount = data[idx++];
+		for(var i=0;i<strokeCount;i++) {
+			// (2) strokePointsCount
+			var strokePointsCount = data[idx++];
+			if(strokePointsCount==0) {
+				continue;
+			} ;
+			// (3) x1,(x2-x1),..., 
+			var points = [ { x: data[idx++] } ];
+			for(var j=1;j<strokePointsCount;j++) { 
+				points.push( { x:( data[idx++] + points[j-1].x )  } );
+			} ;
+			// (4) y1,(y2-y1),..., 
+			points[0].y=data[idx++];
+			for(var j=1;j<strokePointsCount;j++) { 
+				points[j].y = data[idx++] + points[j-1].y;
+			} ;
+			
+			
+			// (5) red1,(red2-red1).....,
+			// (6) green1,(green2-green1).....,
+			// (7) blue1,(blue2-blue1).....,
+			// (8) alpha1,(alpha2-alpha1)..... 
+			
+			for(var j=0;j<strokePointsCount;j++) {
+				points[j].rgba=[0,0,0,0];
+			} ;
+			for(var c=0;c<4;c++) {
+				points[0].rgba[c]=data[idx++];
+				for(var j=1;j<strokePointsCount;j++) {
+					points[j].rgba[c]=data[idx++] + points[j-1].rgba[c];
+				} ;
+			} ;
+			for(var j=0;j<strokePointsCount;j++) {
+				points[j]=new Point(points[j].x, points[j].y,toColor(points[j].rgba));
+			} ;
+		
+			this.newStroke(1,points[0]);
+			
+			for(var j=1;j<strokePointsCount-1;j++) {
+				this.addPointToStroke(1,points[j]);	
+			} ;
+			this.endStroke(1,points[points.length-1]);
+			
+		} ;
+	} ;
+	this.compress = function() {
+		var data = this.pack();
+		return LZString.compressToBase64(JSON.stringify(data));
+	} ;	
+	this.uncompress = function(compressedData) {
+		var data = LZString.decompressFromBase64(compressedData) ;
+		this.unpack( JSON.parse( data ) );
+	} ;
+	return this;
+} ;
+var data = new Data(drawLine);
 var query = JSON.parse( decodeURIComponent( window.location.search ).slice( 1 ) ) ;
 //console.log( query ) ;
 //////////////////////////////////////////////////////////
 var maincanvas = document.getElementById( 'maincanvas' ) ;
-maincanvas.style.width = window.innerWidth + 'px';
-maincanvas.style.height = window.innerHeight+ 'px';
-//ctx.canvas.width  = window.innerWidth;
-//ctx.canvas.height = window.innerHeight;
-maincanvas.width=window.innerWidth;
-maincanvas.height=window.innerHeight;
-//maincanvas.width=maincanvas.clientWidth;
-//maincanvas.height=maincanvas.clientHeight;
-maincanvas.addEventListener( 'mousedown' , _pointerStart, false ) ;
-maincanvas.addEventListener( 'mousemove' , _pointerMove, false ) ;
-maincanvas.addEventListener( 'mouseup'   , _pointerEnd , false  ) ;
-maincanvas.addEventListener( 'mouseout'  , _pointerEnd, false   ) ;
+maincanvas.width=maincanvas.clientWidth;
+maincanvas.height=maincanvas.clientHeight;
 var ctx = maincanvas.getContext( '2d' ) ;
+registerCanvasListeners(maincanvas,data);
 //////////////////////////////////////////////////////////
 var img = new Image( ) ;   
 var fitImageOn = function( canvas , imageObj ) {
@@ -119,133 +271,56 @@ var fitImageOn = function( canvas , imageObj ) {
 	ctx.drawImage( imageObj , xStart , yStart , renderableWidth , renderableHeight ) ;
 };
 img.addEventListener( 'load' , function( ) {
-	imageInit( ) ;
-} , false ) ;
-function imageInit( ) {
 	fitImageOn( maincanvas , img ) ;
 	if( query[ "editor" ] != null ) {
-		fromData( query[ "editor" ] ) ;
-		redraw( ) ;
+		data.uncompress( query[ "editor" ] ) ;
 	} ;	
-}
+} , false ) ;
 img.src = query[ "l" ] ;
-initialize( ) ;
-function initialize( ) {
-	window.addEventListener('resize', resizeCanvas, false);
-	resizeCanvas();
-}
-			
-function resizeCanvas( ) {
-	var oldw = maincanvas.width ;
-	var oldh = maincanvas.height ;
-	var neww = window.innerWidth ;
-	var newh = window.innerHeight ;
-	console.log( oldw + "," + oldh + " -> " + neww + "," + newh ) ;
-	maincanvas.width = window.innerWidth;
-	maincanvas.height = window.innerHeight;
-	maincanvas.style.width = window.innerWidth + 'px';
-	maincanvas.style.height = window.innerHeight + 'px';
-	fitImageOn( maincanvas , img ) ;
-	var iw = img.width ;
-	var ih = img.height ;
-	console.log( iw + "," + ih ) ;
-	redraw( ) ;
-}
 //////////////////////////////////////////////////////////
-function redraw( ) {
-	var i , j ;
-	var pindex = 0 ;
-	var x1 , y1 ;
-	for( i = 0 ; i < _pointerstrokes.length ; i++ ) {
-		for( j = _pointerstrokes[ i ] ; j > 0 ; j-- ) {
-			var pe = _pointere[ pindex ] ;
-			var px = _pointerx[ pindex ] ;
-			var py = _pointery[ pindex ] ;
-			if( pe != "S" ) {
-				drawLine( x1,y1 , px , py ) ;
-			} ;
-			x1 = px ;
-			y1 = py ;
-			pindex++ ;
-		} ;
-	} ;
-} ;
-//////////////////////////////////////////////////////////
-function drawLine( x1 , y1 , x2 , y2 ) {
+function drawLine( p1, p2 ) {
 	ctx.beginPath( ) ;
-	ctx.moveTo( x1 , y1 ) ;
-	ctx.lineTo( x2 , y2 ) ;
+	ctx.moveTo( p1.x , p1.y ) ;
+	ctx.lineTo( p2.x , p2.y ) ;
 	ctx.lineWidth = 11 ;
-	//ctx.strokeStyle = '#000000' ;
-	ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+	ctx.strokeStyle = p1.getRGBA();
 	ctx.stroke( ) ;
 	ctx.beginPath( ) ;
-	ctx.moveTo( x1 , y1 ) ;
-	ctx.lineTo( x2 , y2 ) ;
+	ctx.moveTo( p1.x , p1.y ) ;
+	ctx.lineTo( p2.x , p2.y ) ;
 	ctx.lineWidth = 5 ;
 	ctx.strokeStyle = '#FFFFFF' ;
 	ctx.stroke( ) ;
 } ;
-function addPoint( pe , px , py ) {	
-	_pointere.push( pe ) ;
-	_pointerx.push( px ) ;
-	_pointery.push( py ) ;
-	_pointerstrokes[ _pointerstrokes.length - 1 ]++ ;
-} ;
-function toData( ) {
-	// total strokes , stroke1 length, stroke2 length, .... , e1,x1,y1 ....
-	var data = [ ] ;
-	var i , j , k ;
-	j = _pointerstrokes.length ;
-	data.push( j ) ;
-	//k = 0 ;
-	for( var i = 0 ; i < j ; i++ ) {
-		data.push( _pointerstrokes[ i ] ) ;
-		//k+=_pointerstrokes[ i ] ;
-	};
-	//console.log(k);
-	//console.log(k*3);
-	j = _pointerx.length ;
-	//console.log(j);
-	//console.log(j*3);
-	for( i = 0 ; i < j ; i++ ) {
-		data.push( _pointere[ i ] ) ;
-		data.push( _pointerx[ i ] ) ;
-		data.push( _pointery[ i ] ) ;
-	} ;
-	//console.log(data);
-	return( data ) ;
-} ;
-function fromData( data ) {
-	//console.log(data);
-	_pointerReset( ) ;
-	var i , j , k ;
-	var totalStrokes = data[ 0 ] ;
-	var totalPoints = 0 ;
-	for( i = 0 ; i < totalStrokes ; i++ ) {
-		j = data[ 1 + i ] ;
-		_pointerstrokes.push( data[ 1 + i ] ) ;
-		totalPoints += j ;
-	} ;
-	var t1 = totalStrokes + 1 ;
-	var t2 = t1 + ( totalPoints * 3 ) ;
-	//console.log(t1+" -> "+t2);
-	for( k = t1 ; k < t2 ; k += 3 ) {
-		_pointere.push( data[ k ] ) ;
-		_pointerx.push( data[ k + 1 ] ) ;
-		_pointery.push( data[ k + 2 ] ) ;
-	}
-	//console.log( _pointerstrokes ) ;
-	//console.log( _pointere) ;
-	//console.log( _pointerx) ;
-	//console.log( _pointery) ;
+function getPageLocation() {
+	var location = window.location.href;
+	var idx = location.indexOf("?");
+	if(idx<0) return location;
+	return location.substring(0,idx); 
 }
-//////////////////////////////////////////////////////////
+function createAndCopyUrl() {
+	query[ "editor" ] = data.compress();
+	var href = getPageLocation() + "?" + encodeURIComponent( JSON.stringify( query ) ) ;
+	var urlElement = document.getElementById("url");
+	urlElement.value=href;
+	urlElement.select();
+	document.execCommand('copy');
+	return href;
+}
 function createUrlRedirect( ) {
-	query[ "editor" ] = toData( ) ;
-	window.location.href = "editor.html?" + encodeURIComponent( JSON.stringify( query ) ) ;
-	return(false);
+	window.location.href = createAndCopyUrl();
 } ;
+function gotoUrlShortener(urlShortenerHref) {
+	createAndCopyUrl();
+	window.location.href = urlShortenerHref;
+}
+function reset() {
+	data.clear();
+	query["editor"] = undefined;
+	query["l"] = "https://upload.wikimedia.org/wikipedia/en/7/7f/Wikipedia-logo-fix-test.png"; // TODO: Remove when finished local testing !
+	img.src=query["l"];
+	document.getElementById("url").value="";
+};
 </script>
 </body>
 </html>
