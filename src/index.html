@@ -22,6 +22,9 @@ __INCLUDES__
 
 <script>
 
+
+var isEditor=true;
+
 var querystring = window.location.search ;
 if( querystring == "" ) {
     window.location.href = "http://127.0.0.1/_craft_/metadatum/bookmarklet.html" ;
@@ -226,7 +229,7 @@ function drawPattern( ) {
     ctx.strokeStyle = 'rgba(0,0,0,0.2)';
     ctx.lineWidth = 1 ;
 
-    j=Math.round(maincanvas.width/10);
+    j=Math.round(maincanvas.width/20);
 
     for(i=0;i<maincanvas.width;i+=j){
 
@@ -238,7 +241,7 @@ function drawPattern( ) {
 
     };
 
-    j=Math.round(maincanvas.height/10);
+    j=Math.round(maincanvas.height/20);
     for(i=0;i<maincanvas.height;i+=j){
 
         ctx.beginPath( ) ;

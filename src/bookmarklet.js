@@ -18,27 +18,45 @@
     if( typeof dragDone != 'undefined' ) {
         flagDragDone = dragDone ;
     } ;
+    var flagIsEditor = false ;
+    if( typeof isEditor != 'undefined' ) {
+        flagIsEditor = true ;
+    } ;
 
-    if( y[ "l" ].indexOf( "bookmarklet.html" ) && !flagDragDone ) {
 
-        alert( "Please drag this link to your bookmarks toolbar and use it from there." ) ;
+    function editorMode( ) {
 
-    } else {
+        console.log("YEA! Editor Mode!");
 
-        if( [ "jpeg" , "jpg" , "png" ].some( function( z ) {
+    } ;
 
-            return( y[ "l" ].toLowerCase( ).indexOf( z ) !== -1 ) ;
+    if(flagIsEditor){
+        editorMode();
+    }else{
 
-        } ) ) {
 
-            window.location.href = "http://127.0.0.1/_craft_/metadatum/?" + encodeURIComponent( JSON.stringify( y ) ) ;
+        if( y[ "l" ].indexOf( "bookmarklet.html" ) && !flagDragDone ) {
+
+            alert( "Please drag this link to your bookmarks toolbar and use it from there." ) ;
 
         } else {
 
-            alert( "Right click and select view image and try again." ) ;
+            if( [ "jpeg" , "jpg" , "png" ].some( function( z ) {
+
+                return( y[ "l" ].toLowerCase( ).indexOf( z ) !== -1 ) ;
+
+            } ) ) {
+
+                window.location.href = "http://127.0.0.1/_craft_/metadatum/?" + encodeURIComponent( JSON.stringify( y ) ) ;
+
+            } else {
+
+                alert( "Right click and select view image and try again." ) ;
+
+            } ;
 
         } ;
 
-    } ;
+    };
 
 } )( ) ;
