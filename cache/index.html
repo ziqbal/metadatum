@@ -5,7 +5,7 @@
 <meta http-equiv="x-ua-compatible" content="ie=edge">
 <meta name="description" content="">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Editor</title>
+<title>Metadatum</title>
 </head>
 <body>
 <style>html , body {
@@ -77,6 +77,10 @@ function _pointerMove( evt ) {
 } ;</script>
 <canvas id="maincanvas" width="123" height="321">
 <script>
+var querystring = window.location.search ;
+if( querystring == "" ) {
+    window.location.href = "http://127.0.0.1/_craft_/metadatum/bookmarklet.html" ;
+} ;
 var query = JSON.parse( decodeURIComponent( window.location.search ).slice( 1 ) ) ;
 //console.log( query ) ;
 //////////////////////////////////////////////////////////

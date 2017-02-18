@@ -6,10 +6,12 @@ APP=${PWD##*/}
 
 ####################################
 
-php src/gen-bookmark.php
-php src/gen-editor.php
+php src/gen-bookmarklet.php
+php src/gen-index.php
 
-cp cache/bookmark.html dist/bookmark.html
-cp cache/editor.html dist/editor.html
+cp cache/bookmarklet.html bookmarklet.html
+cp cache/index.html index.html
 
 
+wc -ml bookmarklet.html
+wc -ml index.html

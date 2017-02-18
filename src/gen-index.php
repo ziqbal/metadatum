@@ -2,7 +2,7 @@
 
 
 
-$editorFile = file( "src/editor.html" , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES ) ;
+$editorFile = file( "src/index.html" , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES ) ;
 
 $editorBlob = implode( "\n" , $editorFile ) ;
 
@@ -42,5 +42,5 @@ $editorBlob = str_replace( "__INCLUDES__" , $includedFilesBlob , $editorBlob ) ;
 
 
 
-file_put_contents("cache/editor.html",$editorBlob);
+file_put_contents("cache/index.html",$editorBlob);
 
