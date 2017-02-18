@@ -1,50 +1,44 @@
 
+
 ( function( ) {
 
-	var w = window ;
-	var d = document ;
-
-////////////////////////////////////////////////////////
 
 	var y  = { } ;
 
-	y[ 'l' ] = w.location.href ;
-	y[ 'r' ] = d.referrer ;
-	//y[ 't' ] = d.title ;
+	y[ 'l' ] = window.location.href ;
+	y[ 'r' ] = document.referrer ;
 
-    // FIXME TODO use shorter format and include timezone
-	y[ 'd' ] = ( new Date ).toString( ) ;
+	y[ 't' ] = Date.now( ) ;
+    y[ 'z' ] = new Date( ).getTimezoneOffset( ) ;
 
-	y[ 'i' ] = "__UID__" ;
-	y[ 'z' ] = Math.random( ) ;
-	y[ 'v' ] = "__FILETIME__" ;
+	//console.log( y ) ;
 
-	console.log( y ) ;
 
-////////////////////////////////////////////////////////
+    var flagDragDone = true ;
+    if( typeof dragDone != 'undefined' ) {
+        flagDragDone = dragDone ;
+    } ;
 
-    var f = 0 ;
-    [ "jpeg" , "jpg" , "png" ].forEach( function( z ) {
-        if( y[ "l" ].toLowerCase( ).indexOf( z ) !== -1 ) {
-            f = 1 ;
+    if( y[ "l" ].indexOf( "bookmarklet.html" ) && !flagDragDone ) {
+
+        alert( "Please drag this link to your bookmarks toolbar and use it from there." ) ;
+
+    } else {
+
+        if( [ "jpeg" , "jpg" , "png" ].some( function( z ) {
+
+            return( y[ "l" ].toLowerCase( ).indexOf( z ) !== -1 ) ;
+
+        } ) ) {
+
+            window.location.href = "http://127.0.0.1/_craft_/metadatum/?" + encodeURIComponent( JSON.stringify( y ) ) ;
+
+        } else {
+
+            alert( "Right click and select view image and try again." ) ;
+
         } ;
-    } ) ;
 
-////////////////////////////////////////////////////////
-
-    if( f == 1 ) {
-
-        console.log( "OK" ) ;
-
-		//w.location.href = "http://127.0.0.1/_craft_/metadatum/?" + encodeURIComponent( JSON.stringify( y ) ) ;
-		//w.location.href = "https://igwfband.github.io/?" + encodeURIComponent( JSON.stringify( y ) ) ;
-
-	} else {
-
-		console.log( "ERR" ) ;
-
-		alert( "URL must be image only. Right Click to view image and try again." ) ;
-
-	} ;
+    } ;
 
 } )( ) ;

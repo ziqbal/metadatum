@@ -1,7 +1,6 @@
 <?php
 
-
-date_default_timezone_set( 'UTC' ) ;
+//date_default_timezone_set( 'UTC' ) ;
 
 $bookmarkJS = file( "src/bookmarklet.js" , FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES ) ;
 
@@ -48,10 +47,9 @@ $bookmarkHTML = file( "src/bookmarklet.html" , FILE_IGNORE_NEW_LINES | FILE_SKIP
 
 $bookmarkHTMLBlob = implode( "\n" , $bookmarkHTML ) ;
 
-
 $bookmarkHTMLBlob = str_replace( "__BOOKMARKJS__" , $bookmarkJSBlob , $bookmarkHTMLBlob ) ;
-$bookmarkHTMLBlob = str_replace( "__UID__" , md5(uniqid( 'METADATUM' , true )) , $bookmarkHTMLBlob ) ;
-$bookmarkHTMLBlob = str_replace( "__FILETIME__" , date("Ymd") , $bookmarkHTMLBlob ) ;
-
+//$bookmarkHTMLBlob = str_replace( "__UID__" , md5(uniqid( 'METADATUM' , true )) , $bookmarkHTMLBlob ) ;
+//$bookmarkHTMLBlob = str_replace( "__FILETIME__" , date("Ymd") , $bookmarkHTMLBlob ) ;
 
 file_put_contents( "cache/bookmarklet.html" , $bookmarkHTMLBlob ) ;
+

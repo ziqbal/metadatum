@@ -45,6 +45,9 @@ maincanvas.style.height = window.innerHeight+ 'px';
 maincanvas.width=window.innerWidth;
 maincanvas.height=window.innerHeight;
 
+
+var ctx = maincanvas.getContext( '2d' ) ;
+
 //maincanvas.width=maincanvas.clientWidth;
 //maincanvas.height=maincanvas.clientHeight;
 
@@ -53,7 +56,6 @@ maincanvas.addEventListener( 'mousemove' , _pointerMove, false ) ;
 maincanvas.addEventListener( 'mouseup'   , _pointerEnd , false  ) ;
 maincanvas.addEventListener( 'mouseout'  , _pointerEnd, false   ) ;
 
-var ctx = maincanvas.getContext( '2d' ) ;
 
 
 
@@ -131,6 +133,7 @@ function resizeCanvas( ) {
 	maincanvas.style.width = window.innerWidth + 'px';
 	maincanvas.style.height = window.innerHeight + 'px';
 
+drawPattern();
 	fitImageOn( maincanvas , img ) ;
 
 	var iw = img.width ;
@@ -181,20 +184,60 @@ function redraw( ) {
 
 function drawLine( x1 , y1 , x2 , y2 ) {
 
-	ctx.beginPath( ) ;
-	ctx.moveTo( x1 , y1 ) ;
-	ctx.lineTo( x2 , y2 ) ;
-	ctx.lineWidth = 11 ;
-	//ctx.strokeStyle = '#000000' ;
-	ctx.strokeStyle = 'rgba(0,0,0,0.5)';
-	ctx.stroke( ) ;
+    //y1=100;
 
+    var w1 = 5 ;
+    var w2 = 3 ;
+
+    ctx.strokeStyle = 'rgba(0,0,0,0.5)';
+    ctx.lineWidth = w1 ;
 	ctx.beginPath( ) ;
 	ctx.moveTo( x1 , y1 ) ;
 	ctx.lineTo( x2 , y2 ) ;
-	ctx.lineWidth = 5 ;
-	ctx.strokeStyle = '#FFFFFF' ;
 	ctx.stroke( ) ;
+    ctx.closePath( ) ;
+
+    ctx.lineWidth = w2 ;
+    ctx.strokeStyle = '#FFFFFF' ;
+	ctx.beginPath( ) ;
+	ctx.moveTo( x1 , y1 ) ;
+	ctx.lineTo( x2 , y2 ) ;
+	ctx.stroke( ) ;
+    ctx.closePath( ) ;
+
+} ;
+
+function drawPattern( ) {
+
+    var i,j ;
+
+    ctx.strokeStyle = 'rgba(0,0,0,0.9)';
+    ctx.lineWidth = 1 ;
+
+    j=Math.round(maincanvas.width/10);
+
+    for(i=0;i<maincanvas.width;i+=j){
+
+        ctx.beginPath( ) ;
+        ctx.moveTo( i  , 0 ) ;
+        ctx.lineTo( i , maincanvas.height) ;
+        ctx.stroke( ) ;
+        ctx.closePath( ) ;
+
+    };
+
+    j=Math.round(maincanvas.height/10);
+    for(i=0;i<maincanvas.height;i+=j){
+
+        ctx.beginPath( ) ;
+        ctx.moveTo( 0  , i ) ;
+        ctx.lineTo( maincanvas.width , i ) ;
+        ctx.stroke( ) ;
+        ctx.closePath( ) ;
+
+    }
+
+
 
 } ;
 

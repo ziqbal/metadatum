@@ -11,7 +11,14 @@ BOOKMARKLET
 
 <hr/>
 
-<a href="__BOOKMARKJS__">METADATUM</a>
+<script>
+var dragDone = false ;
+function _bookmarkletDrag( ) {
+    dragDone = true ;
+} ; 
+</script>
+
+<a ondrag="_bookmarkletDrag();" href="__BOOKMARKJS__">METADATUM</a>
 
 <hr/>
 
