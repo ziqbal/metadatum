@@ -78,7 +78,7 @@ function _pointerMove( evt ) {
         var x2 = mousePos.x ;
         var y2 = mousePos.y ;
         var d = Math.pow(x2-x1,2)+Math.pow(y2-y1,2);
-        if(d>100){
+        if(d>10){
     	
     		drawLine( _pointerx[ _pointerx.length - 1 ] , _pointery[ _pointery.length - 1 ] , mousePos.x , mousePos.y ) ;
     		addPoint( "M" , mousePos.x , mousePos.y ) ;
@@ -188,7 +188,7 @@ function redraw( ) {
 //////////////////////////////////////////////////////////
 function drawLine( x1 , y1 , x2 , y2 ) {
     //y1=100;
-    var w1 = 5 ;
+    var w1 = 7 ;
     var w2 = 3 ;
     ctx.strokeStyle = 'rgba(0,0,0,0.5)';
     ctx.lineWidth = w1 ;
@@ -204,11 +204,16 @@ function drawLine( x1 , y1 , x2 , y2 ) {
 	ctx.lineTo( x2 , y2 ) ;
 	ctx.stroke( ) ;
     ctx.closePath( ) ;
-ctx.beginPath();
-ctx.fillStyle = '#FFFFFF';
-ctx.arc(x1,y1, w2 , 0, 2*Math.PI, false);
-ctx.fill();
-ctx.closePath();
+    ctx.beginPath( ) ;
+    ctx.fillStyle = '#FFFFFF' ;
+    ctx.arc( x1 , y1 , w2 - 1 , 0 , 2 * Math.PI , false ) ;
+    ctx.fill( ) ;
+    ctx.closePath( ) ;
+    ctx.beginPath( ) ;
+    ctx.fillStyle = '#FFFFFF' ;
+    ctx.arc( x2 , y2 , w2 - 1 , 0 , 2 * Math.PI , false ) ;
+    ctx.fill( ) ;
+    ctx.closePath( ) ;
 } ;
 function drawPattern( ) {
     var i,j ;

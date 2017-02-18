@@ -98,7 +98,7 @@ function _pointerMove( evt ) {
 
         var d = Math.pow(x2-x1,2)+Math.pow(y2-y1,2);
 
-        if(d>100){
+        if(d>10){
     	
     		drawLine( _pointerx[ _pointerx.length - 1 ] , _pointery[ _pointery.length - 1 ] , mousePos.x , mousePos.y ) ;
 

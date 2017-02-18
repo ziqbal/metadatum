@@ -186,7 +186,7 @@ function drawLine( x1 , y1 , x2 , y2 ) {
 
     //y1=100;
 
-    var w1 = 5 ;
+    var w1 = 7 ;
     var w2 = 3 ;
 
     ctx.strokeStyle = 'rgba(0,0,0,0.5)';
@@ -205,12 +205,17 @@ function drawLine( x1 , y1 , x2 , y2 ) {
 	ctx.stroke( ) ;
     ctx.closePath( ) ;
 
-ctx.beginPath();
-ctx.fillStyle = '#FFFFFF';
-ctx.arc(x1,y1, w2 , 0, 2*Math.PI, false);
-ctx.fill();
-ctx.closePath();
+    ctx.beginPath( ) ;
+    ctx.fillStyle = '#FFFFFF' ;
+    ctx.arc( x1 , y1 , w2 - 1 , 0 , 2 * Math.PI , false ) ;
+    ctx.fill( ) ;
+    ctx.closePath( ) ;
 
+    ctx.beginPath( ) ;
+    ctx.fillStyle = '#FFFFFF' ;
+    ctx.arc( x2 , y2 , w2 - 1 , 0 , 2 * Math.PI , false ) ;
+    ctx.fill( ) ;
+    ctx.closePath( ) ;
 
 } ;
 
