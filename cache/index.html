@@ -78,7 +78,7 @@ function _pointerMove( evt ) {
         var x2 = mousePos.x ;
         var y2 = mousePos.y ;
         var d = Math.pow(x2-x1,2)+Math.pow(y2-y1,2);
-        if(d>25){
+        if(d>100){
     	
     		drawLine( _pointerx[ _pointerx.length - 1 ] , _pointery[ _pointery.length - 1 ] , mousePos.x , mousePos.y ) ;
     		addPoint( "M" , mousePos.x , mousePos.y ) ;
@@ -159,7 +159,7 @@ function resizeCanvas( ) {
 	maincanvas.height = window.innerHeight;
 	maincanvas.style.width = window.innerWidth + 'px';
 	maincanvas.style.height = window.innerHeight + 'px';
-drawPattern();
+    drawPattern();
 	fitImageOn( maincanvas , img ) ;
 	var iw = img.width ;
 	var ih = img.height ;
@@ -204,10 +204,15 @@ function drawLine( x1 , y1 , x2 , y2 ) {
 	ctx.lineTo( x2 , y2 ) ;
 	ctx.stroke( ) ;
     ctx.closePath( ) ;
+ctx.beginPath();
+ctx.fillStyle = '#FFFFFF';
+ctx.arc(x1,y1, w2 , 0, 2*Math.PI, false);
+ctx.fill();
+ctx.closePath();
 } ;
 function drawPattern( ) {
     var i,j ;
-    ctx.strokeStyle = 'rgba(0,0,0,0.9)';
+    ctx.strokeStyle = 'rgba(0,0,0,0.2)';
     ctx.lineWidth = 1 ;
     j=Math.round(maincanvas.width/10);
     for(i=0;i<maincanvas.width;i+=j){
