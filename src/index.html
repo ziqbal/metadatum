@@ -24,7 +24,7 @@ __INCLUDES__
 
 var querystring = window.location.search ;
 if( querystring == "" ) {
-    window.location.href = "http://127.0.0.1/_craft_/metadatum/bookmarklet.html" ;
+    window.location.href = "bookmarklet.html?z" ;
 } ;
 
 var query = JSON.parse( decodeURIComponent( window.location.search ).slice( 1 ) ) ;
