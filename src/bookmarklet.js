@@ -1,7 +1,5 @@
 
-
 ( function( ) {
-
 
 	var y  = { } ;
 
@@ -11,43 +9,29 @@
 	y[ 't' ] = Date.now( ) ;
     y[ 'z' ] = new Date( ).getTimezoneOffset( ) ;
 
-	//console.log( y ) ;
+    // Check if bookmarklet clicked on editor page
+    if( window.location.href.split( "?" )[ 0 ] == "__EDITORURL__" ) {
 
+        console.log("ZZZ YEA! Editor Mode!");
 
-    var flagDragDone = true ;
-    if( typeof dragDone != 'undefined' ) {
-        flagDragDone = dragDone ;
-    } ;
-    var flagIsEditor = false ;
-    if( typeof isEditor != 'undefined' ) {
-        flagIsEditor = true ;
-    } ;
+    } else {
 
+        // Check if clicked bookmarklet link
+        if( (y[ "l" ].indexOf( "bookmarklet.html" ) !=-1 ) && ( typeof window._bookmarkletdragdone === "undefined" ) ) {
 
-    function editorMode( ) {
-
-        console.log("YEA! Editor Mode!");
-
-    } ;
-
-    if(flagIsEditor){
-        editorMode();
-    }else{
-
-
-        if( y[ "l" ].indexOf( "bookmarklet.html" ) && !flagDragDone ) {
-
-            alert( "Please drag this link to your bookmarks toolbar and use it from there." ) ;
+            alert( "Please use this link to your bookmarks toolbar and use it from there." ) ;
 
         } else {
 
+            // Test valid url matches
             if( [ "jpeg" , "jpg" , "png" ].some( function( z ) {
 
                 return( y[ "l" ].toLowerCase( ).indexOf( z ) !== -1 ) ;
 
             } ) ) {
 
-                window.location.href = "http://127.0.0.1/_craft_/metadatum/?" + encodeURIComponent( JSON.stringify( y ) ) ;
+                // redirect to editor page
+                window.location.href = "__EDITORURL__?" + encodeURIComponent( JSON.stringify( y ) ) ;
 
             } else {
 
@@ -57,6 +41,6 @@
 
         } ;
 
-    };
+    } ;
 
 } )( ) ;

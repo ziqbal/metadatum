@@ -47,9 +47,11 @@ $bookmarkHTML = file( "src/bookmarklet.html" , FILE_IGNORE_NEW_LINES | FILE_SKIP
 
 $bookmarkHTMLBlob = implode( "\n" , $bookmarkHTML ) ;
 
-$bookmarkHTMLBlob = str_replace( "__BOOKMARKJS__" , $bookmarkJSBlob , $bookmarkHTMLBlob ) ;
-//$bookmarkHTMLBlob = str_replace( "__UID__" , md5(uniqid( 'METADATUM' , true )) , $bookmarkHTMLBlob ) ;
-//$bookmarkHTMLBlob = str_replace( "__FILETIME__" , date("Ymd") , $bookmarkHTMLBlob ) ;
+$bookmarkHTMLBlob = str_replace( "__BOOKMARKLETJS__" , $bookmarkJSBlob , $bookmarkHTMLBlob ) ;
+
+$bookmarkHTMLBlob = str_replace( "__BOOKMARKLETDRAGDONE__" , "window._bookmarkletdragdone=true;" , $bookmarkHTMLBlob ) ;
+
+$bookmarkHTMLBlob = str_replace( "__EDITORURL__" , "http://127.0.0.1/_craft_/metadatum/" , $bookmarkHTMLBlob ) ;
 
 file_put_contents( "cache/bookmarklet.html" , $bookmarkHTMLBlob ) ;
 

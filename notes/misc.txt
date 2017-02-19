@@ -1,4 +1,6 @@
 
+add input text box on bookmarklet page for manually inserting image url and button to go to editor.
+
 
 
 TODO:-

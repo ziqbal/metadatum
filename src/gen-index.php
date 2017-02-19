@@ -38,6 +38,7 @@ foreach ( $srcfiles as $sfv ) {
 $includedFilesBlob = implode( "\n" , $includedFiles ) ;
 
 $editorBlob = str_replace( "__INCLUDES__" , $includedFilesBlob , $editorBlob ) ;
+
 ////////////////////////////////////////////
 
 
