@@ -36,40 +36,18 @@ function _pointerPos( evt ) {
 
 function _pointerEnd( evt ) {
 
-	//console.log( "pointerend" ) ;
-
 	if( _pointerdown ) {
 
 		var mousePos = _pointerPos( evt ) ;
 		addPoint( "E" , mousePos.x , mousePos.y ) ;
 
-
-		//_pointerstrokes.push( 0 ) ;
-
-
-	}
+	} ;
 
 	_pointerdown = false ;
-	/*
-
-	if( _pointerx.length > 0 ) {
-
-		var lastStrokePos = strokes[ strokes.length-1 ] ;
-
-		if( lastStrokePos != _pointerx.length ) {
-
-			_pointerstrokes.push( _pointerx.length ) ;
-
-		} ;
-
-	} ;
-	*/
 
 } ;
 
 function _pointerStart( evt ) {
-
-	//console.log( "pointerstart" ) ;
 
 	_pointerdown = true ;
 
@@ -78,14 +56,9 @@ function _pointerStart( evt ) {
 	var mousePos = _pointerPos( evt ) ;
 	addPoint( "S" , mousePos.x , mousePos.y ) ;
 
-
 } ;
 
 function _pointerMove( evt ) {
-
-	//console.log( "pointermove" ) ;
-    //evt.preventDefault();
-    //evt.stopPropagation();
 
 	if( _pointerdown ) {
 
@@ -96,14 +69,15 @@ function _pointerMove( evt ) {
         var x2 = mousePos.x ;
         var y2 = mousePos.y ;
 
-        var d = Math.pow(x2-x1,2)+Math.pow(y2-y1,2);
+        var d = Math.pow( x2 - x1 , 2 ) + Math.pow( y2 - y1 , 2 ) ;
 
-        if(d>10){
+        if( d > 100 ) {
     	
-    		drawLine( _pointerx[ _pointerx.length - 1 ] , _pointery[ _pointery.length - 1 ] , mousePos.x , mousePos.y ) ;
+    		drawLine( x1 , y1 , x2 , y2 ) ;
 
-    		addPoint( "M" , mousePos.x , mousePos.y ) ;
-	   };
+    		addPoint( "M" , x2 , y2 ) ;
+            
+	   } ;
 
 	} ;
 

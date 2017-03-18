@@ -15,136 +15,32 @@
 
 <body>
 
+<canvas id="maincanvas" width="0" height="0">
+
 __INCLUDES__
-
-
-<canvas id="maincanvas" width="123" height="321">
 
 <script>
 
 var querystring = window.location.search ;
 if( querystring == "" ) {
-    window.location.href = "bookmarklet.html?z" ;
+    window.location.href = "bookmarklet.html" ;
+    _metadatumhalt_( ) ;
 } ;
 
 var query = JSON.parse( decodeURIComponent( window.location.search ).slice( 1 ) ) ;
 
 //console.log( query ) ;
 
-//////////////////////////////////////////////////////////
-
-var maincanvas = document.getElementById( 'maincanvas' ) ;
-
-maincanvas.style.width = window.innerWidth + 'px';
-maincanvas.style.height = window.innerHeight+ 'px';
-
-
-//ctx.canvas.width  = window.innerWidth;
-//ctx.canvas.height = window.innerHeight;
-
-maincanvas.width=window.innerWidth;
-maincanvas.height=window.innerHeight;
-
-
-var ctx = maincanvas.getContext( '2d' ) ;
-
-//maincanvas.width=maincanvas.clientWidth;
-//maincanvas.height=maincanvas.clientHeight;
-
-maincanvas.addEventListener( 'mousedown' , _pointerStart, false ) ;
-maincanvas.addEventListener( 'mousemove' , _pointerMove, false ) ;
-maincanvas.addEventListener( 'mouseup'   , _pointerEnd , false  ) ;
-maincanvas.addEventListener( 'mouseout'  , _pointerEnd, false   ) ;
-
-
-
-
-
-
 
 //////////////////////////////////////////////////////////
-
-var img = new Image( ) ;   
-
-var fitImageOn = function( canvas , imageObj ) {
-
-	var imageAspectRatio = imageObj.width / imageObj.height;
-	var canvasAspectRatio = canvas.width / canvas.height;
-	var renderableHeight, renderableWidth, xStart, yStart;
-
-	if( imageAspectRatio < canvasAspectRatio ) {
-		renderableHeight = canvas.height ;
-		renderableWidth = imageObj.width * ( renderableHeight / imageObj.height ) ;
-		xStart = ( canvas.width - renderableWidth ) / 2 ;
-		yStart = 0;
-	} else if( imageAspectRatio > canvasAspectRatio ) {
-		renderableWidth = canvas.width
-		renderableHeight = imageObj.height * ( renderableWidth / imageObj.width ) ;
-		xStart = 0 ;
-		yStart = ( canvas.height - renderableHeight ) / 2 ;
-	} else {
-		renderableHeight = canvas.height ;
-		renderableWidth = canvas.width ;
-		xStart = 0 ;
-		yStart = 0 ;
-	} ;
-	ctx.drawImage( imageObj , xStart , yStart , renderableWidth , renderableHeight ) ;
-};
-
-img.addEventListener( 'load' , function( ) {
-
-	imageInit( ) ;
-
-} , false ) ;
-
-function imageInit( ) {
-
-	fitImageOn( maincanvas , img ) ;
-
-	if( query[ "editor" ] != null ) {
-
-		fromData( query[ "editor" ] ) ;
-		redraw( ) ;
-
-	} ;	
-}
-
-img.src = query[ "l" ] ;
-
 
 initialize( ) ;
 
 function initialize( ) {
 	window.addEventListener('resize', resizeCanvas, false);
-	resizeCanvas();
+	_canvasResize();
 }
 			
-function resizeCanvas( ) {
-
-	var oldw = maincanvas.width ;
-	var oldh = maincanvas.height ;
-	var neww = window.innerWidth ;
-	var newh = window.innerHeight ;
-
-	console.log( oldw + "," + oldh + " -> " + neww + "," + newh ) ;
-
-	maincanvas.width = window.innerWidth;
-	maincanvas.height = window.innerHeight;
-	maincanvas.style.width = window.innerWidth + 'px';
-	maincanvas.style.height = window.innerHeight + 'px';
-
-    drawPattern();
-	fitImageOn( maincanvas , img ) ;
-
-	var iw = img.width ;
-	var ih = img.height ;
-
-	//console.log( iw + "," + ih ) ;
-
-	redraw( ) ;
-
-}
-
 //////////////////////////////////////////////////////////
 
 function redraw( ) {
@@ -182,76 +78,6 @@ function redraw( ) {
 
 //////////////////////////////////////////////////////////
 
-function drawLine( x1 , y1 , x2 , y2 ) {
-
-    //y1=100;
-
-    var w1 = 7 ;
-    var w2 = 3 ;
-
-    ctx.strokeStyle = 'rgba(0,0,0,0.5)';
-    ctx.lineWidth = w1 ;
-	ctx.beginPath( ) ;
-	ctx.moveTo( x1 , y1 ) ;
-	ctx.lineTo( x2 , y2 ) ;
-	ctx.stroke( ) ;
-    ctx.closePath( ) ;
-
-    ctx.lineWidth = w2 ;
-    ctx.strokeStyle = '#FFFFFF' ;
-	ctx.beginPath( ) ;
-	ctx.moveTo( x1 , y1 ) ;
-	ctx.lineTo( x2 , y2 ) ;
-	ctx.stroke( ) ;
-    ctx.closePath( ) ;
-
-    ctx.beginPath( ) ;
-    ctx.fillStyle = '#FFFFFF' ;
-    ctx.arc( x1 , y1 , w2 - 1 , 0 , 2 * Math.PI , false ) ;
-    ctx.fill( ) ;
-    ctx.closePath( ) ;
-
-    ctx.beginPath( ) ;
-    ctx.fillStyle = '#FFFFFF' ;
-    ctx.arc( x2 , y2 , w2 - 1 , 0 , 2 * Math.PI , false ) ;
-    ctx.fill( ) ;
-    ctx.closePath( ) ;
-
-} ;
-
-function drawPattern( ) {
-
-    var i,j ;
-
-    ctx.strokeStyle = 'rgba(0,0,0,0.2)';
-    ctx.lineWidth = 1 ;
-
-    j=Math.round(maincanvas.width/20);
-
-    for(i=0;i<maincanvas.width;i+=j){
-
-        ctx.beginPath( ) ;
-        ctx.moveTo( i  , 0 ) ;
-        ctx.lineTo( i , maincanvas.height) ;
-        ctx.stroke( ) ;
-        ctx.closePath( ) ;
-
-    };
-
-    j=Math.round(maincanvas.height/20);
-    for(i=0;i<maincanvas.height;i+=j){
-
-        ctx.beginPath( ) ;
-        ctx.moveTo( 0  , i ) ;
-        ctx.lineTo( maincanvas.width , i ) ;
-        ctx.stroke( ) ;
-        ctx.closePath( ) ;
-
-    }
-
-
-
-} ;
 
 function addPoint( pe , px , py ) {	
 
